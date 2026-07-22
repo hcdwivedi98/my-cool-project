@@ -1,0 +1,64 @@
+.erp-stat-card{
+
+    border-radius:14px;
+
+    border:none;
+
+    height:150px;
+    
+
+    box-shadow:0 4px 12px rgba(146, 3, 3, 0.05);
+
+    transition:.25s;
+    
+    
+
+}
+
+.erp-stat-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+}
+
+.erp-stat-header{
+
+    margin-bottom:10px;
+
+}
+
+.erp-stat-title{
+
+    color:#666;
+
+    font-size:14px;
+
+    font-weight:500;
+
+}
+
+.erp-stat-body{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.erp-stat-icon{
+
+    font-size:34px;
+
+}
+
+.erp-stat-value{
+
+    font-size:22px;
+
+    font-weight:700;
+
+}

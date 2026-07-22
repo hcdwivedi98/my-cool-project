@@ -1,0 +1,147 @@
+/* ===========================================================
+   Pharmacy ERP Theme
+   Version : 1.0 Enterprise
+=========================================================== */
+
+/* ===========================================================
+   LIGHT THEME
+=========================================================== */
+
+:root {
+
+    /* Brand */
+
+    --erp-primary: #1677FF;
+    --erp-primary-hover: #4096FF;
+    --erp-primary-light: #E6F4FF;
+
+    /* Status */
+
+    --erp-success: #52C41A;
+    --erp-warning: #FAAD14;
+    --erp-danger: #FF4D4F;
+    --erp-info: #1677FF;
+
+    /* Background */
+
+    --erp-bg: #F5F7FA;
+    --erp-card-bg: #FFFFFF;
+    --erp-header-bg: #FFFFFF;
+    --erp-sidebar-bg: #FFFFFF;
+
+    /* Table */
+
+    --erp-table-header-bg: #FAFAFA;
+    --erp-table-row-hover: #F5F9FF;
+    --erp-table-striped: #FCFCFC;
+
+    /* Border */
+
+    --erp-border-color: #F0F0F0;
+
+    /* Text */
+
+    --erp-text-primary: #262626;
+    --erp-text-secondary: #8C8C8C;
+    --erp-text-disabled: #BFBFBF;
+
+    /* Shadow */
+
+    --erp-shadow-sm: 0 2px 8px rgba(0,0,0,.05);
+    --erp-shadow-md: 0 6px 18px rgba(0,0,0,.06);
+    --erp-shadow-lg: 0 12px 30px rgba(0,0,0,.10);
+
+    /* Radius */
+
+    --erp-radius-sm: 8px;
+    --erp-radius-md: 10px;
+    --erp-radius-lg: 16px;
+
+    /* Layout */
+
+    --erp-header-height: 64px;
+    --erp-sidebar-width: 260px;
+
+    /* Animation */
+
+    --erp-transition: all .25s ease;
+
+}
+
+/* ===========================================================
+   DARK THEME
+=========================================================== */
+
+[data-theme="dark"] {
+
+    /* Brand */
+
+    --erp-primary: #4096FF;
+    --erp-primary-hover: #69B1FF;
+    --erp-primary-light: rgba(64,150,255,.18);
+
+    /* Status */
+
+    --erp-success: #49AA19;
+    --erp-warning: #D89614;
+    --erp-danger: #FF7875;
+    --erp-info: #4096FF;
+
+    /* Background */
+
+    --erp-bg: #141414;
+    --erp-card-bg: #1F1F1F;
+    --erp-header-bg: #1F1F1F;
+    --erp-sidebar-bg: #1F1F1F;
+
+    /* Table */
+
+    --erp-table-header-bg: #262626;
+    --erp-table-row-hover: #303030;
+    --erp-table-striped: #242424;
+
+    /* Border */
+
+    --erp-border-color: #303030;
+
+    /* Text */
+
+    --erp-text-primary: #F5F5F5;
+    --erp-text-secondary: #BFBFBF;
+    --erp-text-disabled: #8C8C8C;
+
+    /* Shadow */
+
+    --erp-shadow-sm: none;
+    --erp-shadow-md: none;
+    --erp-shadow-lg: none;
+
+}
+
+/* ===========================================================
+   GLOBAL ELEMENTS
+=========================================================== */
+
+body {
+
+    background: var(--erp-bg);
+
+    color: var(--erp-text-primary);
+
+    transition: var(--erp-transition);
+
+}
+
+a {
+
+    color: var(--erp-primary);
+
+}
+
+hr {
+
+    border: none;
+
+    border-top: 1px solid var(--erp-border-color);
+
+}

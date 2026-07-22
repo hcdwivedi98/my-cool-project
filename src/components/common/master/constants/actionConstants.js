@@ -1,0 +1,23 @@
+export const ACTIONS = {
+
+    VIEW: "VIEW",
+
+    EDIT: "EDIT",
+
+    DELETE: "DELETE",
+
+    ACTIVATE: "ACTIVATE",
+
+    DEACTIVATE: "DEACTIVATE",
+
+    APPROVE: "APPROVE",
+
+    REJECT: "REJECT",
+
+    PRINT: "PRINT",
+
+    CLONE: "CLONE",
+
+    HISTORY: "HISTORY"
+
+};

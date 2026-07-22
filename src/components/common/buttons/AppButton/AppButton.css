@@ -1,0 +1,19 @@
+.erp-button{
+
+    height:42px;
+
+    padding:0 18px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+}

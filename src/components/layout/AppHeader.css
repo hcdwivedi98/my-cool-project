@@ -1,0 +1,181 @@
+.erp-header{
+
+    background:#fff;
+
+    height:70px;
+
+    padding:0 24px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+/* LEFT */
+
+.erp-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.erp-search{
+
+    width:100%;
+
+    max-width:420px;
+
+}
+
+.erp-search .ant-input-affix-wrapper{
+
+    border-radius:12px;
+
+}
+
+.erp-shortcut{
+
+    font-size:11px;
+
+    color:#888;
+
+}
+
+.erp-store{
+
+    height:42px;
+
+    border-radius:12px;
+
+}
+
+/* RIGHT */
+
+.erp-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-left:auto;
+
+}
+
+.erp-header-right .ant-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:10px;
+
+}
+
+/* USER */
+
+.erp-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:6px 10px;
+
+    border:1px solid #ececec;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+}
+
+.erp-user-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    line-height:18px;
+
+}
+
+.erp-user-info .ant-typography{
+
+    margin:0;
+
+}
+@media (max-width:992px){
+
+    .erp-search{
+
+        max-width:260px;
+
+    }
+
+    .erp-store{
+
+        display:none;
+
+    }
+
+}
+@media (max-width:768px){
+
+    .erp-header{
+
+        padding:0 12px;
+
+        height:60px;
+
+    }
+
+    .erp-header-left{
+
+        gap:8px;
+
+    }
+
+    .erp-search{
+
+        display:none;
+
+    }
+
+    .erp-user{
+
+        border:none;
+
+        padding:0;
+
+    }
+
+    .erp-user-info{
+
+        display:none;
+
+    }
+
+    .erp-user .ant-tag{
+
+        display:none;
+
+    }
+
+}

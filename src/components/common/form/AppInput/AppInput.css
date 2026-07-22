@@ -1,0 +1,15 @@
+.ant-input,
+.ant-input-password,
+.ant-input-affix-wrapper,
+.ant-input-search {
+    border-radius: 6px;
+}
+
+.ant-input:focus,
+.ant-input-affix-wrapper-focused {
+    box-shadow: none;
+}
+
+.ant-input-textarea textarea {
+    resize: vertical;
+}

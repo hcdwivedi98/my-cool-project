@@ -1,0 +1,22 @@
+.erp-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.erp-page-header-left h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.erp-page-header-left p {
+    margin-top: 4px;
+    color: #8c8c8c;
+}
+
+.erp-page-header-right {
+    display: flex;
+    gap: 12px;
+}

@@ -1,0 +1,60 @@
+export const centerColumns = [
+    {
+        title: "Center Code",
+        dataIndex: "centerCode",
+        key: "centerCode",
+        width: 130,
+        sorter: true,
+    },
+    {
+        title: "Center Name",
+        dataIndex: "centerName",
+        key: "centerName",
+        width: 250,
+        sorter: true,
+    },
+    {
+        title: "Type",
+        dataIndex: "centerType",
+        key: "centerType",
+        width: 150,
+    },
+    {
+        title: "Phone",
+        dataIndex: "contactNo",
+        key: "contactNo",
+        width: 150,
+    },
+    {
+        title: "Email",
+        dataIndex: "email",
+        key: "email",
+        width: 250,
+    },
+    {
+        title: "City",
+        dataIndex: "city",
+        key: "city",
+        width: 150,
+    },
+    {
+        title: "State",
+        dataIndex: "state",
+        key: "state",
+        width: 150,
+    },
+    {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        align: "center",
+    },
+    {
+        title: "Actions",
+        key: "actions",
+        width: 170,
+        align: "center",
+        fixed: "right",
+    },
+];

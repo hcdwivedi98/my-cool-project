@@ -1,0 +1,269 @@
+/* ==========================================
+   Pharmacy ERP - Global Styles
+   Version : 1.0
+   ========================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size:13px;
+
+    color:#262626;
+
+    background:#F5F7FA;
+
+    overflow-x:hidden;
+
+    text-rendering:optimizeLegibility;
+
+    -webkit-font-smoothing:antialiased;
+
+}
+
+#root{
+
+    min-height:100vh;
+
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+    height:8px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#F3F4F6;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#C8CDD5;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#9CA3AF;
+
+}
+
+/* Selection */
+
+::selection{
+
+    background:#1677FF;
+
+    color:#fff;
+
+}
+
+/* Links */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+/* Images */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+/* Headings */
+
+h1,h2,h3,h4,h5,h6{
+
+    font-weight:600;
+
+    margin:0;
+
+}
+
+/* Utility Classes */
+
+.w-100{
+
+    width:100%;
+
+}
+
+.h-100{
+
+    height:100%;
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.text-right{
+
+    text-align:right;
+
+}
+
+.d-flex{
+
+    display:flex;
+
+}
+
+.justify-between{
+
+    justify-content:space-between;
+
+}
+
+.align-center{
+
+    align-items:center;
+
+}
+
+.gap-8{
+
+    gap:8px;
+
+}
+
+.gap-16{
+
+    gap:16px;
+
+}
+
+/* Card Hover */
+
+.erp-card{
+
+    transition:all .25s ease;
+
+}
+
+.erp-card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* Table */
+
+.ant-table{
+
+    font-size:13px;
+
+}
+
+.ant-table-thead>tr>th{
+
+    font-weight:600;
+
+    background:#FAFAFA !important;
+
+}
+
+.ant-table-tbody>tr{
+
+    transition:.2s;
+
+}
+
+.ant-table-tbody>tr:hover{
+
+    background:#F5F9FF;
+
+}
+
+/* Form */
+
+.ant-form-item-label>label{
+
+    font-size:13px;
+
+    font-weight:500;
+
+}
+
+.ant-input,
+.ant-select-selector,
+.ant-picker{
+
+    font-size:13px !important;
+
+}
+
+/* Buttons */
+
+.ant-btn{
+
+    border-radius:10px;
+
+    font-weight:500;
+
+}
+
+/* Drawer */
+
+.ant-drawer-header{
+
+    border-bottom:1px solid #f0f0f0;
+
+}
+
+.ant-drawer-footer{
+
+    border-top:1px solid #f0f0f0;
+
+    background:#fff;
+
+}
+
+/* Statistic */
+
+.ant-statistic-content{
+
+    font-size:30px !important;
+
+    font-weight:700;
+
+}

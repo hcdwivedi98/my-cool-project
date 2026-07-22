@@ -1,0 +1,239 @@
+/* ==========================================
+   Pharmacy ERP Layout
+   Version : 1.0
+========================================== */
+
+/* Main Layout */
+
+.erp-layout {
+
+    min-height: 100vh;
+
+    background: #F5F7FA;
+
+}
+
+/* Sidebar */
+
+.erp-sidebar {
+
+    background: #FFFFFF;
+
+    border-right: 1px solid #F0F0F0;
+
+    box-shadow: 2px 0 10px rgba(0, 0, 0, .04);
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+}
+
+/* Header */
+
+.erp-header {
+
+    height: 64px;
+
+    background: #FFFFFF;
+
+    padding: 0 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid #F0F0F0;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+}
+
+/* Content */
+
+.erp-content {
+
+    background: #F5F7FA;
+
+    padding: 24px;
+
+    min-height: calc(100vh - 64px);
+
+    overflow-x: auto;
+
+}
+
+/* Page Container */
+
+.erp-page {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+/* Section */
+
+.erp-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+/* Page Header */
+
+.erp-page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 24px;
+
+    gap: 24px;
+
+}
+
+
+/* Responsive Header */
+
+.erp-page-header-left {
+
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+.erp-page-header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap:wrap;
+
+}
+
+/* Mobile Drawer */
+
+.erp-mobile-drawer .ant-drawer-body {
+
+    padding: 0;
+
+}
+
+/* Sidebar Logo */
+
+.erp-logo {
+
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-bottom: 1px solid #F0F0F0;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: #1677FF;
+
+}
+
+/* Content Scroll */
+
+.erp-scroll {
+
+    overflow-y: auto;
+
+}
+
+/* Desktop */
+
+@media (min-width: 992px) {
+
+    .erp-content {
+
+        padding: 24px;
+
+    }
+
+}
+
+/* Tablet */
+
+@media (max-width: 991px) {
+
+    .erp-content {
+
+        padding: 16px;
+
+    }
+
+    .erp-header {
+
+        padding: 0 16px;
+
+    }
+
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .erp-content {
+
+        padding: 12px;
+
+    }
+
+    .erp-header {
+
+        height: 56px;
+
+        padding: 0 12px;
+
+    }
+
+    .erp-page-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .erp-page-header-right {
+
+        width: 100%;
+
+        justify-content: flex-end;
+
+    }
+
+}

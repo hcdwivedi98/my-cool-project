@@ -1,0 +1,176 @@
+/* ==========================================
+   Pharmacy ERP - Card Styles
+   Version : 1.0
+========================================== */
+
+/* Base Card */
+
+.erp-card {
+
+    background: var(--erp-card-bg, #FFFFFF);
+
+    border: 1px solid var(--erp-border-color, #F0F0F0);
+
+    border-radius: 16px;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+
+    transition: all .25s ease;
+
+}
+
+.erp-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 28px rgba(0,0,0,.08);
+
+}
+
+/* Ant Design Card */
+
+.ant-card {
+
+    border-radius: 16px !important;
+
+    border: 1px solid #F0F0F0 !important;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+
+}
+
+.ant-card-head {
+
+    min-height: 56px;
+
+    padding: 0 20px;
+
+    background: #FAFAFA;
+
+    border-bottom: 1px solid #F0F0F0;
+
+}
+
+.ant-card-head-title {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #262626;
+
+}
+
+.ant-card-body {
+
+    padding: 20px;
+
+}
+
+/* Dashboard Statistic Card */
+
+.erp-stat-card {
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+    min-height: 100px;
+    padding: 16px;
+
+}
+
+.erp-stat-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: 0 14px 30px rgba(0,0,0,.10);
+
+}
+
+/* Card Header */
+
+.erp-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+
+}
+
+/* Card Title */
+
+.erp-card-title {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #262626;
+
+}
+
+/* Card Subtitle */
+
+.erp-card-subtitle {
+
+    font-size: 12px;
+
+    color: #8C8C8C;
+
+    margin-top: 4px;
+
+}
+
+/* Card Footer */
+
+.erp-card-footer {
+
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #F0F0F0;
+
+}
+
+/* Compact Card */
+
+.erp-card-compact .ant-card-body {
+
+    padding: 16px;
+
+}
+
+/* Transparent Card */
+
+.erp-card-transparent {
+
+    background: transparent;
+
+    border: none;
+
+    box-shadow: none;
+
+}
+
+/* Mobile */
+
+@media (max-width:576px){
+
+    .ant-card-body{
+
+        padding:16px;
+
+    }
+
+    .ant-card-head{
+
+        padding:0 16px;
+
+    }
+
+}

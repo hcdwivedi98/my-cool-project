@@ -1,0 +1,59 @@
+/* ==========================================
+   Pharmacy ERP Buttons
+========================================== */
+
+.ant-btn{
+
+    height:40px;
+
+    border-radius:10px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.ant-btn:hover{
+
+    transform:translateY(-1px);
+
+}
+
+/* Primary */
+
+.ant-btn-primary{
+
+    box-shadow:0 4px 12px rgba(22,119,255,.20);
+
+}
+
+/* Circle */
+
+.ant-btn-circle{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+/* Small */
+
+.ant-btn-sm{
+
+    height:32px;
+
+}
+
+/* Large */
+
+.ant-btn-lg{
+
+    height:44px;
+
+}

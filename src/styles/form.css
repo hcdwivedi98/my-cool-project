@@ -1,0 +1,83 @@
+/* ==========================================
+   Pharmacy ERP Form
+========================================== */
+
+.ant-form-item{
+
+    margin-bottom:18px;
+
+}
+
+/* Label */
+
+.ant-form-item-label>label{
+
+    font-size:13px;
+
+    font-weight:600;
+
+    color:var(--erp-text-primary);
+
+}
+
+/* Input */
+
+.ant-input{
+
+    height:40px;
+
+    border-radius:10px;
+
+}
+
+/* Select */
+
+.ant-select-selector{
+
+    height:40px !important;
+
+    border-radius:10px !important;
+
+}
+
+.ant-select-selection-item{
+
+    line-height:38px !important;
+
+}
+
+/* Date */
+
+.ant-picker{
+
+    height:40px;
+
+    width:100%;
+
+    border-radius:10px;
+
+}
+
+/* TextArea */
+
+.ant-input-textarea textarea{
+
+    border-radius:10px;
+
+}
+
+/* Validation */
+
+.ant-form-item-explain-error{
+
+    font-size:12px;
+
+}
+
+/* Required */
+
+.ant-form-item-required::before{
+
+    color:var(--erp-danger) !important;
+
+}
