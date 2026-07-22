@@ -7,9 +7,6 @@ import {
 import Login from "../../core/auth/Login";
 
 import Dashboard from "../../pages/dashboard/Dashboard";
-import Users from "../../pages/users/Users";
-import Roles from "../../pages/roles/Roles";
-import Permissions from "../../pages/permissions/Permissions";
 import Stores from "../../pages/stores/Stores";
 import Settings from "../../pages/settings/Settings";
 
@@ -22,7 +19,7 @@ import SupplierItemMapping from "../../modules/supplierItemMapping";
 import PurchaseRequisition from "../../modules/purchaseRequisition";
 // Organization Modules
 import CenterMasterPage from "../../modules/organization/center/pages/CenterMasterPage";
-
+import DepartmentMasterPage from "../../modules/department/pages/DepartmentPage";
 function AppRoutes() {
 
     return (
@@ -80,6 +77,10 @@ function AppRoutes() {
                         element={<PurchaseRequisition />}
                     />
 
+                    <Route
+                        path="/departments"
+                        element={<DepartmentMasterPage />}
+                    />
                 </Route>
 
             </Routes>

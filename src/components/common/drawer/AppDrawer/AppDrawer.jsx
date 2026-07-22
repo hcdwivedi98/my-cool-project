@@ -4,19 +4,7 @@ import { Drawer } from "antd";
 
 import AppDrawerFooter from "./AppDrawerFooter";
 
-const drawerFooter = React.isValidElement(footer)
-    ? footer
-    : footer
-        ? (
-            <AppDrawerFooter
-                loading={loading}
-                onCancel={onClose}
-                onSave={onSave}
-                saveText={saveText}
-                cancelText={cancelText}
-            />
-        )
-        : null;
+
 
 function AppDrawer({
     title,
@@ -38,6 +26,21 @@ function AppDrawer({
 
     ...props
 }) {
+
+    const drawerFooter = React.isValidElement(footer)
+        ? footer
+        : footer
+            ? (
+                <AppDrawerFooter
+                    loading={loading}
+                    onCancel={onClose}
+                    onSave={onSave}
+                    saveText={saveText}
+                    cancelText={cancelText}
+                />
+            )
+            : null;
+
     return (
         <Drawer
             {...props}
@@ -66,8 +69,8 @@ AppDrawer.propTypes = {
     onClose: PropTypes.func,
     onSave: PropTypes.func,
     footer: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.node,
+        PropTypes.bool,
+        PropTypes.node,
     ]),
     saveText: PropTypes.string,
     cancelText: PropTypes.string,
