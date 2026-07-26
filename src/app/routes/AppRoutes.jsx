@@ -20,6 +20,8 @@ import PurchaseRequisition from "../../modules/purchaseRequisition";
 // Organization Modules
 import CenterMasterPage from "../../modules/organization/center/pages/CenterMasterPage";
 import DepartmentMasterPage from "../../modules/department/pages/DepartmentPage";
+import StorePage from "../../modules/organization/store/pages/StorePage";
+
 function AppRoutes() {
 
     return (
@@ -42,10 +44,7 @@ function AppRoutes() {
                         path="/dashboard"
                         element={<Dashboard />}
                     />
-                    <Route
-                        path="/stores"
-                        element={<Stores />}
-                    />
+                   
 
                     <Route
                         path="/centers"
@@ -80,6 +79,11 @@ function AppRoutes() {
                     <Route
                         path="/departments"
                         element={<DepartmentMasterPage />}
+                    />
+
+                    <Route
+                        path="/stores"
+                        element={<StorePage />}
                     />
                 </Route>
 
