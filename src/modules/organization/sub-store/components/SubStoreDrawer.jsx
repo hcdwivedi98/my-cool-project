@@ -7,9 +7,11 @@ import {
 } from "@/components/common";
 
 import ConfirmCloseModal from "./ConfirmCloseModal";
-import StoreForm from "./StoreForm";
-import { prepareStorePayload } from "../utils/store.helper";
-const StoreDrawer = ({
+import SubStoreForm from "./SubStoreForm";
+
+
+
+const SubStoreDrawer = ({
     open,
     mode,
     record,
@@ -20,6 +22,7 @@ const StoreDrawer = ({
     const [form] = Form.useForm();
 
     const [confirmOpen, setConfirmOpen] = useState(false);
+
     const [dirty, setDirty] = useState(false);
 
     const [activeTab, setActiveTab] = useState("basic");
@@ -31,8 +34,6 @@ const StoreDrawer = ({
             "location",
             "inventory",
             "financial",
-            "printer",
-            "workingHours",
             "approval",
             "documents",
             ...(record ? ["audit"] : [])
@@ -56,7 +57,7 @@ const StoreDrawer = ({
 
         }
 
-        onClose();
+        onClose?.();
 
     };
 
@@ -66,7 +67,7 @@ const StoreDrawer = ({
 
         setConfirmOpen(false);
 
-        onClose();
+        onClose?.();
 
     };
 
@@ -107,9 +108,9 @@ const StoreDrawer = ({
                     await form.validateFields([
                         "centerId",
                         "departmentId",
-                        "storeCode",
-                        "storeName",
-                        "storeType"
+                        "storeId",
+                        "subStoreCode",
+                        "subStoreName"
                     ]);
 
                     break;
@@ -117,6 +118,7 @@ const StoreDrawer = ({
                 case "contact":
 
                     await form.validateFields([
+                        "contactPerson",
                         "mobileNo",
                         "email"
                     ]);
@@ -133,6 +135,15 @@ const StoreDrawer = ({
 
                     break;
 
+                case "inventory":
+
+                    await form.validateFields([
+                        "allowNegativeStock",
+                        "batchMandatory"
+                    ]);
+
+                    break;
+
                 default:
                     break;
 
@@ -143,7 +154,7 @@ const StoreDrawer = ({
         }
         catch {
 
-            // validation failed
+            // Validation Failed
 
         }
 
@@ -155,31 +166,34 @@ const StoreDrawer = ({
 
             const values = await form.validateFields();
 
-            const payload = prepareStorePayload(values);
+            const payload = prepareSubStorePayload(values);
 
             await onSave?.(payload);
 
             setDirty(false);
 
-            onClose();
+            onClose?.();
 
-        } catch {
-            // validation failed
+        }
+        catch {
+
+            // Validation Failed
+
         }
 
     };
 
-    return (
+        return (
 
         <>
 
             <AppDrawer
                 title={
                     mode === "ADD"
-                        ? "Add Store"
+                        ? "Add Sub Store"
                         : mode === "EDIT"
-                            ? "Edit Store"
-                            : "View Store"
+                            ? "Edit Sub Store"
+                            : "View Sub Store"
                 }
                 open={open}
                 width={1000}
@@ -191,7 +205,75 @@ const StoreDrawer = ({
                     flexDirection: "column",
                     height: "100%"
                 }}
-             >
+                footer={
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            width: "100%"
+                        }}
+                    >
+
+                        <AppButton
+                            disabled={isFirstTab}
+                            onClick={goPrevious}
+                        >
+                            Previous
+                        </AppButton>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: 8
+                            }}
+                        >
+
+                            <AppButton
+                                onClick={handleClose}
+                            >
+                                {
+                                    mode === "VIEW"
+                                        ? "Close"
+                                        : "Cancel"
+                                }
+                            </AppButton>
+
+                            {
+
+                                mode !== "VIEW" && (
+
+                                    !isLastTab ? (
+
+                                        <AppButton
+                                            type="primary"
+                                            onClick={handleNext}
+                                        >
+                                            Next
+                                        </AppButton>
+
+                                    ) : (
+
+                                        <AppButton
+                                            type="primary"
+                                            onClick={handleSave}
+                                        >
+                                            Save Sub Store
+                                        </AppButton>
+
+                                    )
+
+                                )
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                }
+            >
 
                 <div
                     style={{
@@ -201,7 +283,7 @@ const StoreDrawer = ({
                     }}
                 >
 
-                    <StoreForm
+                    <SubStoreForm
                         form={form}
                         mode={mode}
                         record={record}
@@ -211,8 +293,6 @@ const StoreDrawer = ({
                     />
 
                 </div>
-
-                
 
             </AppDrawer>
 
@@ -233,4 +313,4 @@ const StoreDrawer = ({
 
 };
 
-export default StoreDrawer;
+export default SubStoreDrawer;
