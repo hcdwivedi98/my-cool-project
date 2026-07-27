@@ -5,6 +5,8 @@ import {
     ShopOutlined,
     HomeOutlined,
     CalendarOutlined,
+    DatabaseOutlined,
+    AppstoreOutlined
 } from "@ant-design/icons";
 
 import { MENU_KEYS } from "../../../core/constants/menuKeys";
@@ -46,6 +48,8 @@ const menuConfig = [
                 icon: <HomeOutlined />,
                 path: "/organization/sub-stores",
             },
+
+
             {
                 key: MENU_KEYS.HOLIDAY_MASTER,
                 label: "Holiday Calendar",

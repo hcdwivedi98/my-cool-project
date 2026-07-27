@@ -162,6 +162,12 @@ function AppSidebar() {
                                 icon: <HomeOutlined />,
                                 label: "Sub Store Master",
                             },
+                            {
+                                key: "/rack-master",
+                                icon: <HomeOutlined />,
+                                label: "Rack Master",
+                            },
+
 
                         ],
                     },

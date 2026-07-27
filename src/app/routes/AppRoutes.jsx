@@ -22,6 +22,7 @@ import CenterMasterPage from "../../modules/organization/center/pages/CenterMast
 import DepartmentMasterPage from "../../modules/department/pages/DepartmentPage";
 import StorePage from "../../modules/organization/store/pages/StorePage";
 import SubStorePage from "../../modules/organization/sub-store/pages/SubStorePage";
+import RackPage from "@/modules/organization/rack/pages/RackPage";
 
 function AppRoutes() {
 
@@ -91,6 +92,12 @@ function AppRoutes() {
                         path="/sub-stores"
                         element={<SubStorePage />}
                     />
+
+                    <Route
+                        path="/rack-master"
+                        element={<RackPage />}
+                    />
+
                 </Route>
 
             </Routes>
