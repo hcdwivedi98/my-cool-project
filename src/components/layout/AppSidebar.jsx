@@ -167,6 +167,11 @@ function AppSidebar() {
                                 icon: <HomeOutlined />,
                                 label: "Rack Master",
                             },
+                            {
+                                key: "/shelf-master",
+                                icon: <HomeOutlined />,
+                                label: "Shelf Master",
+                            },
 
 
                         ],

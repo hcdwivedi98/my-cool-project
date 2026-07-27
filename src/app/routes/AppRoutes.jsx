@@ -23,7 +23,7 @@ import DepartmentMasterPage from "../../modules/department/pages/DepartmentPage"
 import StorePage from "../../modules/organization/store/pages/StorePage";
 import SubStorePage from "../../modules/organization/sub-store/pages/SubStorePage";
 import RackPage from "@/modules/organization/rack/pages/RackPage";
-
+import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
 function AppRoutes() {
 
     return (
@@ -96,6 +96,11 @@ function AppRoutes() {
                     <Route
                         path="/rack-master"
                         element={<RackPage />}
+                    />
+
+                    <Route
+                        path="/shelf-master"
+                        element={<ShelfPage/>}
                     />
 
                 </Route>
