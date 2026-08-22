@@ -235,6 +235,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Drug Category Master",
                     },
+                    {
+                        key: "/dosage-form",
+                        icon: <BankOutlined />,
+                        label: "Dosage Form Master",
+                    },
 
                 ],
             },

@@ -31,7 +31,7 @@ import ManufacturerPage from "@/modules/pharmacy/manufacturer/pages/Manufacturer
 import GenericPage from "@/modules/pharmacy/generic/pages/GenericPage";
 import { UomPage,} from "@/modules/pharmacy/uom";
 import { DrugCategoryPage,} from "@/modules/pharmacy/drug-category";
-
+import DosageFormPage from "@/modules/pharmacy/dosage-form";
 function AppRoutes() {
 
     return (
@@ -140,6 +140,11 @@ function AppRoutes() {
                     <Route
                         path="/drug-category"
                         element={<DrugCategoryPage  />}
+                    />
+
+                    <Route
+                        path="/dosage-form"
+                        element={<DosageFormPage   />}
                     />
                 </Route>
 
