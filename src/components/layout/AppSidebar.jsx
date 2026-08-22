@@ -220,6 +220,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Manufacturer Master",
                     },
+                    {
+                        key: "/generic",
+                        icon: <BankOutlined />,
+                        label: "Generic Master",
+                    },
 
                 ],
             },
