@@ -25,6 +25,7 @@ import SubStorePage from "../../modules/organization/sub-store/pages/SubStorePag
 import RackPage from "@/modules/organization/rack/pages/RackPage";
 import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
 import { BinPage, } from "@/modules/organization/bin";
+import { DrugPage,} from "@/modules/pharmacy/drug";
 
 function AppRoutes() {
 
@@ -108,6 +109,11 @@ function AppRoutes() {
                     <Route
                         path="/bins"
                         element={<BinPage />}
+                    />
+
+                    <Route
+                        path="/DrugPage"
+                        element={<DrugPage />}
                     />
                 </Route>
 

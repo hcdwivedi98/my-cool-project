@@ -172,13 +172,14 @@ function AppSidebar() {
                                 icon: <HomeOutlined />,
                                 label: "Shelf Master",
                             },
-{
+                            {
                                 key: "/bins",
                                 icon: <HomeOutlined />,
                                 label: "Bin Master",
                             },
 
                         ],
+
                     },
 
                     {
@@ -203,6 +204,21 @@ function AppSidebar() {
 
                 ],
             },
+            {
+                key: "pharmacy-master",
+                icon: <ApartmentOutlined />,
+                label: "pharmacy Master",
+                children: [
+
+                    {
+                        key: "/DrugPage",
+                        icon: <BankOutlined />,
+                        label: "Drug Master",
+                    },
+
+                ],
+            },
+
 
             {
                 key: "/settings",
