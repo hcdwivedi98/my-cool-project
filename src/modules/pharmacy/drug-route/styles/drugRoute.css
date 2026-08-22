@@ -1,0 +1,266 @@
+/* =========================================================
+   DRUG ROUTE PAGE
+   ========================================================= */
+
+.drug-route-page {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.drug-route-form {
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM HEADER
+   ========================================================= */
+
+.drug-route-form-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+
+    border-bottom:
+        1px solid #f0f0f0;
+}
+
+
+.drug-route-form-title {
+    font-size: 20px;
+
+    line-height: 28px;
+
+    font-weight: 600;
+
+    color: #262626;
+}
+
+
+.drug-route-form-subtitle {
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    line-height: 20px;
+
+    color: #8c8c8c;
+}
+
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.drug-route-form-section {
+    width: 100%;
+
+    margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.drug-route-section-header {
+    margin-bottom: 20px;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid #f0f0f0;
+}
+
+
+.drug-route-section-title {
+    font-size: 16px;
+
+    font-weight: 600;
+
+    line-height: 24px;
+
+    color: #262626;
+}
+
+
+.drug-route-section-description {
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    line-height: 20px;
+
+    color: #8c8c8c;
+}
+
+
+/* =========================================================
+   FORM ITEM SPACING
+   ========================================================= */
+
+.drug-route-form-section
+.ant-form-item {
+    margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   VALIDATION CARD
+   ========================================================= */
+
+.drug-route-validation-card {
+    min-height: 90px;
+
+    padding: 16px;
+
+    box-sizing: border-box;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+
+    border-radius: 8px;
+}
+
+
+.drug-route-validation-label {
+    font-size: 13px;
+
+    line-height: 20px;
+
+    color: #8c8c8c;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.drug-route-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 24px;
+
+    padding-top: 16px;
+
+    border-top:
+        1px solid #f0f0f0;
+}
+
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.drug-route-form
+.ant-form-item-label
+> label {
+    font-weight: 500;
+}
+
+
+.drug-route-form
+.ant-input,
+.drug-route-form
+.ant-input-number,
+.drug-route-form
+.ant-select-selector {
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.drug-route-table-card {
+    width: 100%;
+
+    border-radius: 12px;
+}
+
+
+.drug-route-table-card
+.ant-table {
+    width: 100%;
+}
+
+
+.drug-route-table-card
+.ant-table-thead
+> tr
+> th {
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.drug-route-table-card
+.ant-table-tbody
+> tr
+> td {
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .drug-route-page {
+        padding: 16px;
+    }
+
+
+    /* -----------------------------------------
+       FORM
+    ----------------------------------------- */
+
+    .drug-route-form-title {
+        font-size: 18px;
+
+        line-height: 26px;
+    }
+
+
+    .drug-route-form-actions {
+        justify-content: stretch;
+    }
+
+
+    .drug-route-form-actions
+    .ant-space {
+        width: 100%;
+    }
+
+
+    .drug-route-form-actions
+    .ant-space-item {
+        flex: 1;
+    }
+
+
+    .drug-route-form-actions
+    .ant-btn {
+        width: 100%;
+    }
+
+}

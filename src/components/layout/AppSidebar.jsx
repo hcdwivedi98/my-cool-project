@@ -240,6 +240,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Dosage Form Master",
                     },
+                    {
+                        key: "/drug-route",
+                        icon: <BankOutlined />,
+                        label: "Drug Route Master",
+                    },
 
                 ],
             },

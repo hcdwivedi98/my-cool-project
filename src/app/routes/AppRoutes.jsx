@@ -25,13 +25,15 @@ import SubStorePage from "../../modules/organization/sub-store/pages/SubStorePag
 import RackPage from "@/modules/organization/rack/pages/RackPage";
 import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
 import { BinPage, } from "@/modules/organization/bin";
-import { DrugPage,} from "@/modules/pharmacy/drug";
-import { SupplierPage,} from "@/modules/pharmacy/supplier";
+import { DrugPage, } from "@/modules/pharmacy/drug";
+import { SupplierPage, } from "@/modules/pharmacy/supplier";
 import ManufacturerPage from "@/modules/pharmacy/manufacturer/pages/ManufacturerPage";
 import GenericPage from "@/modules/pharmacy/generic/pages/GenericPage";
-import { UomPage,} from "@/modules/pharmacy/uom";
-import { DrugCategoryPage,} from "@/modules/pharmacy/drug-category";
+import { UomPage, } from "@/modules/pharmacy/uom";
+import { DrugCategoryPage, } from "@/modules/pharmacy/drug-category";
 import DosageFormPage from "@/modules/pharmacy/dosage-form";
+import DrugRoutePage from "../../modules/pharmacy/drug-route";
+
 function AppRoutes() {
 
     return (
@@ -122,7 +124,7 @@ function AppRoutes() {
                         element={<SupplierPage />}
                     />
 
-                     <Route
+                    <Route
                         path="/manufacturers"
                         element={<ManufacturerPage />}
                     />
@@ -139,12 +141,19 @@ function AppRoutes() {
 
                     <Route
                         path="/drug-category"
-                        element={<DrugCategoryPage  />}
+                        element={<DrugCategoryPage />}
                     />
 
                     <Route
                         path="/dosage-form"
-                        element={<DosageFormPage   />}
+                        element={<DosageFormPage />}
+                    />
+
+                    <Route
+                        path="/drug-route"
+                        element={
+                            <DrugRoutePage />
+                        }
                     />
                 </Route>
 
