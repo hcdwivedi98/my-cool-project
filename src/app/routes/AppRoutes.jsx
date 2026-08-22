@@ -24,6 +24,8 @@ import StorePage from "../../modules/organization/store/pages/StorePage";
 import SubStorePage from "../../modules/organization/sub-store/pages/SubStorePage";
 import RackPage from "@/modules/organization/rack/pages/RackPage";
 import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
+import { BinPage, } from "@/modules/organization/bin";
+
 function AppRoutes() {
 
     return (
@@ -100,9 +102,13 @@ function AppRoutes() {
 
                     <Route
                         path="/shelf-master"
-                        element={<ShelfPage/>}
+                        element={<ShelfPage />}
                     />
 
+                    <Route
+                        path="/bins"
+                        element={<BinPage />}
+                    />
                 </Route>
 
             </Routes>

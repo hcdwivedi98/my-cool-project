@@ -172,7 +172,11 @@ function AppSidebar() {
                                 icon: <HomeOutlined />,
                                 label: "Shelf Master",
                             },
-
+{
+                                key: "/bins",
+                                icon: <HomeOutlined />,
+                                label: "Bin Master",
+                            },
 
                         ],
                     },
