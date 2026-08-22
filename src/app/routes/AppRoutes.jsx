@@ -29,6 +29,7 @@ import { DrugPage,} from "@/modules/pharmacy/drug";
 import { SupplierPage,} from "@/modules/pharmacy/supplier";
 import ManufacturerPage from "@/modules/pharmacy/manufacturer/pages/ManufacturerPage";
 import GenericPage from "@/modules/pharmacy/generic/pages/GenericPage";
+import { UomPage,} from "@/modules/pharmacy/uom";
 
 function AppRoutes() {
 
@@ -128,6 +129,11 @@ function AppRoutes() {
                     <Route
                         path="/generic"
                         element={<GenericPage />}
+                    />
+
+                    <Route
+                        path="/uom"
+                        element={<UomPage />}
                     />
                 </Route>
 

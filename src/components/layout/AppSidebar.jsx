@@ -225,6 +225,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Generic Master",
                     },
+                    {
+                        key: "/uom",
+                        icon: <BankOutlined />,
+                        label: "UOM Master",
+                    },
 
                 ],
             },
