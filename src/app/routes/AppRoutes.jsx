@@ -13,7 +13,7 @@ import Settings from "../../pages/settings/Settings";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 
 // Feature Modules
-import DrugMaster from "../../modules/drugMaster";
+//import DrugMaster from "../../modules/drugMaster";
 import SupplierMaster from "../../modules/supplierMaster";
 import SupplierItemMapping from "../../modules/supplierItemMapping";
 import PurchaseRequisition from "../../modules/purchaseRequisition";
@@ -26,6 +26,7 @@ import RackPage from "@/modules/organization/rack/pages/RackPage";
 import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
 import { BinPage, } from "@/modules/organization/bin";
 import { DrugPage,} from "@/modules/pharmacy/drug";
+import { SupplierPage,} from "@/modules/pharmacy/supplier";
 
 function AppRoutes() {
 
@@ -61,10 +62,6 @@ function AppRoutes() {
                         element={<Settings />}
                     />
 
-                    <Route
-                        path="/drug-master"
-                        element={<DrugMaster />}
-                    />
 
                     <Route
                         path="/suppliers"
@@ -114,6 +111,11 @@ function AppRoutes() {
                     <Route
                         path="/DrugPage"
                         element={<DrugPage />}
+                    />
+
+                    <Route
+                        path="/suppliers"
+                        element={<SupplierPage />}
                     />
                 </Route>
 

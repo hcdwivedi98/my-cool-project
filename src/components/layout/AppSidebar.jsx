@@ -77,11 +77,6 @@ function AppSidebar() {
                 children: [
 
                     {
-                        key: "/drug-master",
-                        label: "Drug Master",
-                    },
-
-                    {
                         key: "/inventory",
                         label: "Current Stock",
                     },
@@ -214,6 +209,11 @@ function AppSidebar() {
                         key: "/DrugPage",
                         icon: <BankOutlined />,
                         label: "Drug Master",
+                    },
+                    {
+                        key: "/suppliers",
+                        icon: <BankOutlined />,
+                        label: "Supplier Master",
                     },
 
                 ],
