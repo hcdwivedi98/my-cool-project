@@ -245,6 +245,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Drug Route Master",
                     },
+                    {
+                        key: "/drug-strength",
+                        icon: <BankOutlined />,
+                        label: "Drug Strength Master",
+                    },
 
                 ],
             },

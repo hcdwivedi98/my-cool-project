@@ -33,6 +33,7 @@ import { UomPage, } from "@/modules/pharmacy/uom";
 import { DrugCategoryPage, } from "@/modules/pharmacy/drug-category";
 import DosageFormPage from "@/modules/pharmacy/dosage-form";
 import DrugRoutePage from "../../modules/pharmacy/drug-route";
+import { DrugStrengthPage,} from "@/modules/pharmacy/drug-strength";
 
 function AppRoutes() {
 
@@ -153,6 +154,13 @@ function AppRoutes() {
                         path="/drug-route"
                         element={
                             <DrugRoutePage />
+                        }
+                    />
+
+                    <Route
+                        path="/drug-strength"
+                        element={
+                            <DrugStrengthPage />
                         }
                     />
                 </Route>
