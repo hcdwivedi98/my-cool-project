@@ -27,6 +27,7 @@ import ShelfPage from "@/modules/organization/shelf/pages/ShelfPage";
 import { BinPage, } from "@/modules/organization/bin";
 import { DrugPage,} from "@/modules/pharmacy/drug";
 import { SupplierPage,} from "@/modules/pharmacy/supplier";
+import ManufacturerPage from "@/modules/pharmacy/manufacturer/pages/ManufacturerPage";
 
 function AppRoutes() {
 
@@ -116,6 +117,11 @@ function AppRoutes() {
                     <Route
                         path="/suppliers"
                         element={<SupplierPage />}
+                    />
+
+                     <Route
+                        path="/manufacturers"
+                        element={<ManufacturerPage />}
                     />
                 </Route>
 

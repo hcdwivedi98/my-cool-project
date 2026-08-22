@@ -215,6 +215,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Supplier Master",
                     },
+                    {
+                        key: "/manufacturers",
+                        icon: <BankOutlined />,
+                        label: "Manufacturer Master",
+                    },
 
                 ],
             },
