@@ -230,6 +230,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "UOM Master",
                     },
+                    {
+                        key: "/drug-category",
+                        icon: <BankOutlined />,
+                        label: "Drug Category Master",
+                    },
 
                 ],
             },

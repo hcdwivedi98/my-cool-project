@@ -1,0 +1,426 @@
+/* =========================================================
+   DRUG CATEGORY - FORM SECTIONS
+   ========================================================= */
+
+.form-section {
+    padding: 18px 20px;
+    margin-bottom: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.form-section-header {
+    margin-bottom: 18px;
+}
+
+.form-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    color: #1f1f1f;
+}
+
+.form-section-description {
+    margin-top: 3px;
+
+    font-size: 12px;
+    line-height: 18px;
+    color: #8c8c8c;
+}
+
+
+/* =========================================================
+   VALIDATION INFO CARDS
+   ========================================================= */
+
+.validation-info-card {
+    min-height: 82px;
+    padding: 12px 14px;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+
+    transition: all 0.2s ease;
+}
+
+.validation-info-card:hover {
+    background: #ffffff;
+    border-color: #d9d9d9;
+}
+
+.validation-info-label {
+    margin-bottom: 8px;
+
+    font-size: 12px;
+    line-height: 18px;
+    color: #8c8c8c;
+}
+
+.validation-info-value {
+    display: flex;
+    align-items: center;
+
+    min-height: 28px;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #262626;
+}
+
+.validation-info-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 28px;
+
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+
+    color: #262626;
+}
+
+.validation-info-stat .anticon {
+    font-size: 18px;
+}
+
+.validation-info-value .ant-tag {
+    margin-inline-end: 0;
+}
+
+
+/* =========================================================
+   VALIDATION NOTE
+   ========================================================= */
+
+.form-section-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 4px;
+    padding: 9px 12px;
+
+    font-size: 12px;
+    line-height: 18px;
+    color: #595959;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   AUDIT NOTE
+   ========================================================= */
+
+.audit-system-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 14px;
+    padding: 9px 12px;
+
+    font-size: 12px;
+    line-height: 18px;
+    color: #595959;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+}
+
+.audit-system-note .ant-tag {
+    margin-inline-end: 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767px) {
+    .form-section {
+        padding: 16px;
+    }
+
+    .validation-info-card {
+        min-height: 76px;
+    }
+
+    .validation-info-stat {
+        font-size: 18px;
+    }
+}
+
+/* =========================================================
+   DRUG CATEGORY DRAWER
+   ========================================================= */
+
+.drug-category-drawer-header {
+    width: 100%;
+}
+
+.drug-category-drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.drug-category-drawer-title-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: #e6f4ff;
+    color: #1677ff;
+
+    font-size: 17px;
+}
+
+.drug-category-drawer-title-text {
+    font-size: 16px;
+    line-height: 22px;
+
+    font-weight: 600;
+
+    color: #1f1f1f;
+}
+
+.drug-category-drawer-subtitle {
+    margin-top: 2px;
+
+    font-size: 12px;
+    line-height: 18px;
+
+    font-weight: 400;
+
+    color: #8c8c8c;
+}
+
+
+/* =========================================================
+   CONFIRM CLOSE MODAL
+   ========================================================= */
+
+.drug-category-confirm-content {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 4px 0;
+}
+
+.drug-category-confirm-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #fff7e6;
+    color: #fa8c16;
+
+    font-size: 18px;
+}
+
+.drug-category-confirm-message {
+    padding-top: 7px;
+
+    font-size: 13px;
+    line-height: 20px;
+
+    color: #595959;
+}
+
+
+/* =========================================================
+   CONFIRM MODAL BUTTONS
+   ========================================================= */
+
+.drug-category-modal-btn {
+    min-width: 120px;
+    height: 34px;
+
+    padding: 0 14px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        all 0.2s ease;
+}
+
+.drug-category-modal-btn.secondary {
+    border: 1px solid #d9d9d9;
+
+    background: #ffffff;
+
+    color: #262626;
+}
+
+.drug-category-modal-btn.secondary:hover {
+    border-color: #1677ff;
+
+    color: #1677ff;
+}
+
+.drug-category-modal-btn.danger {
+    border: 1px solid #ff4d4f;
+
+    background: #ff4d4f;
+
+    color: #ffffff;
+}
+
+.drug-category-modal-btn.danger:hover {
+    background: #d9363e;
+
+    border-color: #d9363e;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .drug-category-drawer-title-text {
+        font-size: 15px;
+    }
+
+    .drug-category-drawer-subtitle {
+        font-size: 11px;
+    }
+
+    .drug-category-modal-btn {
+        min-width: 105px;
+    }
+}
+
+/* =========================================================
+   DRUG CATEGORY PAGE
+   ========================================================= */
+
+.drug-category-page {
+    width: 100%;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.drug-category-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 16px;
+}
+
+.drug-category-page-header .ant-btn {
+    height: 36px;
+
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
+
+.drug-category-filter-card {
+    margin-bottom: 16px;
+
+    border-radius: 8px;
+}
+
+.drug-category-filter-card
+.ant-card-body {
+    padding: 16px;
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.drug-category-table-card {
+    border-radius: 8px;
+}
+
+.drug-category-table-card
+.ant-card-body {
+    padding: 0;
+}
+
+.drug-category-table-card
+.ant-table-thead
+> tr
+> th {
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.drug-category-table-card
+.ant-table-tbody
+> tr
+> td {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .drug-category-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .drug-category-page-header
+    .ant-btn {
+        width: 100%;
+    }
+
+    .drug-category-filter-card
+    .ant-input {
+        width: 100% !important;
+    }
+
+}

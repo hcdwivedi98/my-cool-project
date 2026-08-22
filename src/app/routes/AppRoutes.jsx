@@ -30,6 +30,7 @@ import { SupplierPage,} from "@/modules/pharmacy/supplier";
 import ManufacturerPage from "@/modules/pharmacy/manufacturer/pages/ManufacturerPage";
 import GenericPage from "@/modules/pharmacy/generic/pages/GenericPage";
 import { UomPage,} from "@/modules/pharmacy/uom";
+import { DrugCategoryPage,} from "@/modules/pharmacy/drug-category";
 
 function AppRoutes() {
 
@@ -134,6 +135,11 @@ function AppRoutes() {
                     <Route
                         path="/uom"
                         element={<UomPage />}
+                    />
+
+                    <Route
+                        path="/drug-category"
+                        element={<DrugCategoryPage  />}
                     />
                 </Route>
 
