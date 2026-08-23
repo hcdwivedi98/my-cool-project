@@ -173,6 +173,7 @@ function AppSidebar() {
                                 label: "Bin Master",
                             },
 
+
                         ],
 
                     },
@@ -249,6 +250,11 @@ function AppSidebar() {
                         key: "/drug-strength",
                         icon: <BankOutlined />,
                         label: "Drug Strength Master",
+                    },
+                    {
+                        key: "/drug-units",
+                        icon: <HomeOutlined />,
+                        label: "Drug Unit Master",
                     },
 
                 ],
