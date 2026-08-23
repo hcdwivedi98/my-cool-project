@@ -1,0 +1,577 @@
+/* =========================================================
+   USER VALIDATION
+   ========================================================= */
+
+.user-validation-overall-card {
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+
+.user-validation-overall {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+
+.user-validation-summary {
+    margin-top: 6px;
+
+    font-size: 12px;
+    line-height: 18px;
+
+    color: #8c8c8c;
+}
+
+
+.user-validation-card {
+    width: 100%;
+    min-height: 76px;
+
+    padding: 14px 16px;
+    box-sizing: border-box;
+
+    background: #fff;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+
+.user-validation-label {
+    margin-bottom: 8px;
+
+    font-size: 12px;
+    line-height: 18px;
+
+    font-weight: 500;
+
+    color: #8c8c8c;
+}
+
+
+.user-validation-value {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+    line-height: 20px;
+
+    color: #262626;
+}
+
+
+.user-validation-summary-card {
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding: 16px;
+    box-sizing: border-box;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+
+.user-validation-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+.user-validation-summary-grid > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.user-validation-summary-grid span {
+    font-size: 12px;
+    line-height: 18px;
+
+    color: #8c8c8c;
+}
+
+
+.user-validation-summary-grid strong {
+    font-size: 14px;
+    line-height: 22px;
+
+    color: #262626;
+}
+
+
+.user-validation-alert {
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   USER AUDIT
+   ========================================================= */
+
+.user-audit-empty {
+    width: 100%;
+
+    min-height: 120px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+
+    box-sizing: border-box;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+
+.user-audit-card {
+    width: 100%;
+}
+
+
+.user-audit-note {
+    margin-top: 16px;
+
+    padding: 12px 16px;
+
+    box-sizing: border-box;
+
+    background: #fafafa;
+
+    border: 1px solid #f0f0f0;
+
+    border-radius: 6px;
+
+    color: #8c8c8c;
+
+    font-size: 13px;
+    line-height: 20px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .user-validation-overall {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .user-validation-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .user-validation-card {
+        min-height: auto;
+    }
+
+
+    .user-audit-empty {
+        min-height: 100px;
+    }
+
+}
+
+/* =========================================================
+   USER DRAWER
+   ========================================================= */
+
+.user-drawer
+.ant-drawer-header {
+    padding: 16px 24px;
+}
+
+
+.user-drawer
+.ant-drawer-title {
+    font-size: 18px;
+
+    line-height: 26px;
+
+    font-weight: 600;
+}
+
+
+.user-drawer
+.ant-drawer-body {
+    padding: 24px;
+}
+
+
+/* =========================================================
+   CONFIRM CLOSE MODAL
+   ========================================================= */
+
+.user-confirm-close {
+    width: 100%;
+}
+
+
+.user-confirm-close-icon {
+    margin-bottom: 12px;
+
+    font-size: 30px;
+
+    line-height: 34px;
+
+    color: #faad14;
+}
+
+
+.user-confirm-close-content {
+    width: 100%;
+}
+
+
+.user-confirm-close-title {
+    margin-bottom: 6px;
+
+    font-size: 16px;
+
+    line-height: 24px;
+
+    font-weight: 600;
+
+    color: #262626;
+}
+
+
+.user-confirm-close-message {
+    font-size: 14px;
+
+    line-height: 22px;
+
+    color: #595959;
+}
+
+
+.user-confirm-close-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 24px;
+
+    padding-top: 16px;
+
+    border-top:
+        1px solid #f0f0f0;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .user-drawer
+    .ant-drawer-header {
+        padding: 14px 16px;
+    }
+
+
+    .user-drawer
+    .ant-drawer-body {
+        padding: 16px;
+    }
+
+
+    .user-confirm-close-actions {
+        justify-content: stretch;
+    }
+
+
+    .user-confirm-close-actions
+    .ant-space {
+        width: 100%;
+    }
+
+
+    .user-confirm-close-actions
+    .ant-space-item {
+        flex: 1;
+    }
+
+
+    .user-confirm-close-actions
+    .ant-btn {
+        width: 100%;
+    }
+
+}
+/* =========================================================
+   USER PAGE
+   ========================================================= */
+
+.user-page {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.user-page-header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 20px;
+}
+
+
+.user-page-header-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.user-page-title {
+    margin: 0 !important;
+
+    font-size: 28px !important;
+    line-height: 36px !important;
+
+    font-weight: 600 !important;
+
+    color: #141414 !important;
+}
+
+
+.user-page-description {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+    line-height: 22px;
+}
+
+
+.user-page-header-action {
+    flex-shrink: 0;
+}
+
+
+.user-page-header-action .ant-btn {
+    min-width: 160px;
+
+    height: 48px;
+
+    padding: 0 22px;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.user-summary-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-bottom: 16px;
+}
+
+
+.user-summary-grid .ant-card {
+    min-height: 100px;
+
+    border-radius: 12px;
+}
+
+
+.user-summary-value {
+    margin-top: 8px;
+
+    font-size: 26px;
+    line-height: 34px;
+
+    font-weight: 600;
+
+    color: #141414;
+}
+
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.user-filter-card {
+    width: 100%;
+
+    border-radius: 12px;
+}
+
+
+.user-filter-card .ant-card-body {
+    padding: 16px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.user-table-card {
+    width: 100%;
+
+    border-radius: 12px;
+}
+
+
+.user-table-card .ant-card-body {
+    padding: 16px;
+}
+
+
+.user-table-card .ant-table {
+    width: 100%;
+}
+
+
+.user-table-card .ant-table-thead > tr > th {
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.user-table-card .ant-table-tbody > tr > td {
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .user-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .user-page {
+        padding: 16px;
+    }
+
+
+    .user-page-header {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 16px;
+    }
+
+
+    .user-page-header-action {
+        width: 100%;
+    }
+
+
+    .user-page-header-action .ant-btn {
+        width: 100%;
+
+        min-width: 100%;
+    }
+
+
+    .user-page-title {
+        font-size: 22px !important;
+
+        line-height: 30px !important;
+    }
+
+
+    .user-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .user-filter-card .ant-space {
+        width: 100%;
+    }
+
+
+    .user-filter-card .ant-space-item {
+        width: 100%;
+    }
+
+
+    .user-filter-card .ant-input,
+    .user-filter-card .ant-select,
+    .user-filter-card .ant-btn {
+        width: 100% !important;
+    }
+
+}

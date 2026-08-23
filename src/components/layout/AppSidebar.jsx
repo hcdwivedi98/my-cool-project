@@ -183,21 +183,7 @@ function AppSidebar() {
                         label: "Manufacturer Master",
                     },
 
-                    {
-                        key: "/users",
-                        label: "Users",
-                    },
-
-                    {
-                        key: "/roles",
-                        label: "Roles",
-                    },
-
-                    {
-                        key: "/permissions",
-                        label: "Permissions",
-                    },
-
+                    
                 ],
             },
             {
@@ -260,6 +246,21 @@ function AppSidebar() {
                 ],
             },
 
+            {
+                key: "user-master",
+                icon: <ApartmentOutlined />,
+                label: "User Management",
+
+                children: [
+
+                    {
+                        key: "/user-management/user",
+                        icon: <BankOutlined />,
+                        label: "Users",
+                    },
+
+                ],
+            },
 
             {
                 key: "/settings",
