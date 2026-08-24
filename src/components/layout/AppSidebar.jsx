@@ -263,6 +263,11 @@ function AppSidebar() {
                         icon: <BankOutlined />,
                         label: "Role",
                     },
+                    {
+                        key: "/permission",
+                        icon: <BankOutlined />,
+                        label: "Permission",
+                    },
 
                 ],
             },

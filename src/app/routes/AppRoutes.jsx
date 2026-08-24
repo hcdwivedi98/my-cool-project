@@ -37,6 +37,7 @@ import { DrugStrengthPage, } from "@/modules/pharmacy/drug-strength";
 import DrugUnitPage from "@/modules/pharmacy/drug-unit/pages/DrugUnitPage";
 import UserPage from "@/modules/user-management/user";
 import RolePage from "@/modules/user-management/role";
+import { PermissionPage, } from "@/modules/user-management/permission";
 
 function AppRoutes() {
 
@@ -182,6 +183,10 @@ function AppRoutes() {
                     <Route
                         path="/role"
                         element={<RolePage />}
+                    />
+                    <Route
+                        path="/permission"
+                        element={<PermissionPage />}
                     />
                 </Route>
 
