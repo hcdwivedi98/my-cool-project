@@ -183,7 +183,7 @@ function AppSidebar() {
                         label: "Manufacturer Master",
                     },
 
-                    
+
                 ],
             },
             {
@@ -257,6 +257,11 @@ function AppSidebar() {
                         key: "/user-management/user",
                         icon: <BankOutlined />,
                         label: "Users",
+                    },
+                    {
+                        key: "/role",
+                        icon: <BankOutlined />,
+                        label: "Role",
                     },
 
                 ],
