@@ -39,6 +39,7 @@ import UserPage from "@/modules/user-management/user";
 import RolePage from "@/modules/user-management/role";
 import { PermissionPage, } from "@/modules/user-management/permission";
 import { PurchaseOrderPage, } from "@/modules/purchase-management/purchase-order";
+import { GRNPage, } from "@/modules/purchase-management/grn";
 
 function AppRoutes() {
 
@@ -195,6 +196,10 @@ function AppRoutes() {
                         path="/purchase-order"
                         element={<PurchaseOrderPage />}
                     />
+
+                    <Route
+                        path="/grn"
+                        element={<GRNPage />}               />
                 </Route>
 
             </Routes>

@@ -1,0 +1,1200 @@
+/* =========================================================
+   GRN MODULE
+   Complete Drawer + Form + Tabs + Footer Styles
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT / DRAWER
+   ========================================================= */
+
+.grn-drawer {
+    background: #f5f7fa;
+}
+
+.grn-drawer .ant-drawer-content {
+    background: #f5f7fa;
+}
+
+.grn-drawer .ant-drawer-body {
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #f5f7fa;
+}
+
+
+/* =========================================================
+   DRAWER SHELL
+   ========================================================= */
+
+.grn-drawer-shell {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #f5f7fa;
+}
+
+
+/* =========================================================
+   DRAWER HEADER
+   ========================================================= */
+
+.grn-drawer-header {
+    flex: 0 0 70px;
+
+    height: 70px;
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 24px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    z-index: 50;
+}
+
+.grn-drawer-header-content {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.grn-drawer-title {
+    margin: 0;
+
+    font-size: 21px;
+    line-height: 28px;
+
+    font-weight: 600;
+
+    color: #111827;
+
+    white-space: nowrap;
+}
+
+.grn-drawer-subtitle {
+    margin-top: 1px;
+
+    font-size: 13px;
+    line-height: 18px;
+
+    color: #8a94a6;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.grn-drawer-close {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 10px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    font-size: 28px;
+    font-weight: 300;
+
+    line-height: 1;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.grn-drawer-close:hover {
+    background: #f3f4f6;
+
+    color: #111827;
+}
+
+.grn-drawer-close:active {
+    background: #e5e7eb;
+}
+
+
+/* =========================================================
+   MAIN DRAWER AREA
+   ========================================================= */
+
+.grn-drawer-main {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #f5f7fa;
+}
+
+
+/* =========================================================
+   GRN FORM ROOT
+   ========================================================= */
+
+.grn-form {
+    width: 100%;
+    height: 100%;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   ANT DESIGN FORM
+   ========================================================= */
+
+.grn-form > .ant-form {
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FORM BODY / SCROLL AREA
+   ========================================================= */
+
+.grn-form-body {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 0 20px 20px;
+
+    background: #f5f7fa;
+
+    scrollbar-width: thin;
+    scrollbar-color: #c9ced6 transparent;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.grn-form-body::-webkit-scrollbar {
+    width: 7px;
+}
+
+.grn-form-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.grn-form-body::-webkit-scrollbar-thumb {
+    background: #c9ced6;
+
+    border-radius: 10px;
+}
+
+.grn-form-body::-webkit-scrollbar-thumb:hover {
+    background: #adb4bf;
+}
+
+
+/* =========================================================
+   MAIN TABS
+   ========================================================= */
+
+.grn-main-tabs {
+    width: 100%;
+
+    background: transparent;
+}
+
+
+/* =========================================================
+   TAB NAVIGATION
+   ========================================================= */
+
+.grn-main-tabs > .ant-tabs-nav {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 40;
+
+    margin: 0 -20px;
+
+    padding: 0 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.grn-main-tabs > .ant-tabs-nav::before {
+    display: none;
+}
+
+
+/* =========================================================
+   TAB ITEMS
+   ========================================================= */
+
+.grn-main-tabs .ant-tabs-tab {
+    margin: 0 8px 0 0 !important;
+
+    padding: 14px 15px;
+
+    color: #475467;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    transition:
+        color 0.2s ease;
+}
+
+.grn-main-tabs .ant-tabs-tab:hover {
+    color: #1677ff;
+}
+
+.grn-main-tabs
+.ant-tabs-tab-active {
+    color: #1677ff;
+}
+
+.grn-main-tabs
+.ant-tabs-tab-btn {
+    color: inherit;
+
+    font-weight: inherit;
+}
+
+
+/* =========================================================
+   TAB INK BAR
+   ========================================================= */
+
+.grn-main-tabs
+.ant-tabs-ink-bar {
+    height: 2px;
+
+    background: #1677ff;
+
+    border-radius: 2px;
+}
+
+
+/* =========================================================
+   TAB CONTENT HOLDER
+   ========================================================= */
+
+.grn-main-tabs
+.ant-tabs-content-holder {
+    width: 100%;
+
+    padding-top: 16px;
+}
+
+.grn-main-tabs
+.ant-tabs-content {
+    width: 100%;
+}
+
+
+/* =========================================================
+   TAB CONTENT
+   ========================================================= */
+
+.grn-tab-content {
+    width: 100%;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SECTION CARD
+   ========================================================= */
+
+.grn-tab-content .grn-section {
+    width: 100%;
+
+    margin: 0 0 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e1e5ea;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 1px 2px rgba(16, 24, 40, 0.03);
+}
+
+.grn-tab-content
+.grn-section:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.grn-tab-content
+.grn-section-header {
+    min-height: 52px;
+
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e7e9ed;
+}
+
+.grn-tab-content
+.grn-section-header-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.grn-tab-content
+.grn-section-icon {
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #1677ff;
+
+    font-size: 16px;
+}
+
+.grn-tab-content
+.grn-section-title {
+    margin: 0;
+
+    font-size: 16px;
+    line-height: 22px;
+
+    font-weight: 600;
+
+    color: #172033;
+}
+
+.grn-tab-content
+.grn-section-description {
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    color: #8a94a6;
+}
+
+
+/* =========================================================
+   SECTION BODY
+   ========================================================= */
+
+.grn-tab-content
+.grn-section-body {
+    padding: 18px 20px 4px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   FORM GRID - 3 COLUMNS
+   ========================================================= */
+
+.grn-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    column-gap: 20px;
+
+    row-gap: 0;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM GRID - 3 COLUMNS
+   ========================================================= */
+
+.grn-form-grid-3 {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    column-gap: 20px;
+
+    row-gap: 0;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM GRID - 2 COLUMNS
+   ========================================================= */
+
+.grn-form-grid-2 {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    column-gap: 20px;
+
+    row-gap: 0;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   FORM GRID SPANS
+   ========================================================= */
+
+.grn-form-item {
+    min-width: 0;
+}
+
+.grn-form-item-full {
+    grid-column: 1 / -1;
+}
+
+.grn-form-item-span-2 {
+    grid-column: span 2;
+}
+
+
+/* =========================================================
+   ANT DESIGN FORM ITEM
+   ========================================================= */
+
+.grn-form .ant-form-item {
+    margin-bottom: 14px;
+}
+
+.grn-tab-content
+.ant-form-item {
+    margin-bottom: 14px;
+}
+
+
+/* =========================================================
+   FORM LABEL
+   ========================================================= */
+
+.grn-form
+.ant-form-item-label {
+    padding-bottom: 5px;
+}
+
+.grn-tab-content
+.ant-form-item-label {
+    padding-bottom: 5px;
+}
+
+.grn-form
+.ant-form-item-label > label,
+.grn-tab-content
+.ant-form-item-label > label {
+    height: auto;
+
+    color: #172033;
+
+    font-size: 13px;
+
+    line-height: 20px;
+
+    font-weight: 500;
+}
+
+.grn-form
+.ant-form-item-required::before,
+.grn-tab-content
+.ant-form-item-required::before {
+    color: #ef4444 !important;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.grn-form
+.ant-input,
+.grn-form
+.ant-input-number,
+.grn-form
+.ant-picker,
+.grn-form
+.ant-select-selector,
+
+.grn-tab-content
+.ant-input,
+.grn-tab-content
+.ant-input-number,
+.grn-tab-content
+.ant-picker,
+.grn-tab-content
+.ant-select-selector {
+    min-height: 42px !important;
+
+    height: 42px;
+
+    border-radius: 8px !important;
+
+    border: 1px solid #d9dee5 !important;
+
+    box-shadow: none !important;
+
+    background: #ffffff;
+
+    color: #172033;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   INPUT PADDING
+   ========================================================= */
+
+.grn-form
+.ant-input,
+.grn-tab-content
+.ant-input {
+    padding: 9px 12px;
+}
+
+
+/* =========================================================
+   INPUT NUMBER
+   ========================================================= */
+
+.grn-form
+.ant-input-number,
+.grn-tab-content
+.ant-input-number {
+    width: 100%;
+}
+
+.grn-form
+.ant-input-number-input,
+.grn-tab-content
+.ant-input-number-input {
+    height: 40px;
+
+    padding: 0 12px;
+}
+
+
+/* =========================================================
+   DATE PICKER
+   ========================================================= */
+
+.grn-form
+.ant-picker,
+.grn-tab-content
+.ant-picker {
+    width: 100%;
+
+    padding: 0 12px;
+}
+
+.grn-form
+.ant-picker-input > input,
+.grn-tab-content
+.ant-picker-input > input {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.grn-form
+.ant-select,
+.grn-tab-content
+.ant-select {
+    width: 100%;
+}
+
+.grn-form
+.ant-select-selector,
+.grn-tab-content
+.ant-select-selector {
+    display: flex !important;
+
+    align-items: center;
+
+    padding: 0 12px !important;
+}
+
+.grn-form
+.ant-select-selection-placeholder,
+.grn-tab-content
+.ant-select-selection-placeholder {
+    color: #a4acb9;
+}
+
+.grn-form
+.ant-select-selection-item,
+.grn-tab-content
+.ant-select-selection-item {
+    color: #172033;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   PLACEHOLDERS
+   ========================================================= */
+
+.grn-form
+.ant-input::placeholder,
+.grn-tab-content
+.ant-input::placeholder,
+
+.grn-form
+.ant-picker-input > input::placeholder,
+.grn-tab-content
+.ant-picker-input > input::placeholder {
+    color: #a4acb9;
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+.grn-form
+.ant-input:focus,
+.grn-form
+.ant-input-focused,
+
+.grn-form
+.ant-input-number:focus,
+.grn-form
+.ant-input-number-focused,
+
+.grn-form
+.ant-picker-focused,
+
+.grn-form
+.ant-select-focused
+.ant-select-selector,
+
+.grn-tab-content
+.ant-input:focus,
+.grn-tab-content
+.ant-input-focused,
+
+.grn-tab-content
+.ant-input-number:focus,
+.grn-tab-content
+.ant-input-number-focused,
+
+.grn-tab-content
+.ant-picker-focused,
+
+.grn-tab-content
+.ant-select-focused
+.ant-select-selector {
+    border-color: #1677ff !important;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(22, 119, 255, 0.08) !important;
+}
+
+
+/* =========================================================
+   DISABLED FIELDS
+   ========================================================= */
+
+.grn-form
+.ant-input-disabled,
+.grn-form
+.ant-input-number-disabled,
+.grn-form
+.ant-picker-disabled,
+.grn-form
+.ant-select-disabled
+.ant-select-selector,
+
+.grn-tab-content
+.ant-input-disabled,
+.grn-tab-content
+.ant-input-number-disabled,
+.grn-tab-content
+.ant-picker-disabled,
+.grn-tab-content
+.ant-select-disabled
+.ant-select-selector {
+    color: #9aa3b2 !important;
+
+    background: #f5f6f8 !important;
+
+    border-color: #dfe3e8 !important;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.grn-form
+textarea.ant-input,
+.grn-tab-content
+textarea.ant-input {
+    min-height: 84px;
+
+    height: auto;
+
+    resize: vertical;
+
+    border-radius: 8px !important;
+}
+
+
+/* =========================================================
+   VALIDATION ERROR
+   ========================================================= */
+
+.grn-validation-error {
+    margin: 0 0 14px;
+
+    padding: 11px 14px;
+
+    border: 1px solid #ffccc7;
+
+    border-radius: 8px;
+
+    background: #fff2f0;
+
+    color: #cf1322;
+
+    font-size: 13px;
+
+    line-height: 20px;
+}
+
+.grn-validation-error strong {
+    font-weight: 600;
+}
+
+.grn-validation-error ul {
+    margin: 5px 0 0;
+
+    padding-left: 18px;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.grn-items-table {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.grn-items-table
+.ant-table {
+    width: 100%;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+}
+
+.grn-items-table
+.ant-table-thead > tr > th {
+    padding: 10px;
+
+    background: #f8fafc !important;
+
+    color: #475467;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.grn-items-table
+.ant-table-tbody > tr > td {
+    padding: 9px 10px;
+
+    color: #374151;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   AUDIT EMPTY STATE
+   ========================================================= */
+
+.grn-audit-empty {
+    min-height: 160px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: #98a2b3;
+}
+
+.grn-audit-empty-title {
+    margin-top: 8px;
+
+    font-size: 14px;
+
+    color: #667085;
+}
+
+.grn-audit-empty-description {
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    color: #98a2b3;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.grn-drawer-footer {
+    flex: 0 0 72px;
+
+    height: 72px;
+    min-height: 72px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding: 12px 24px;
+
+    background: #ffffff;
+
+    border-top: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 -2px 8px
+        rgba(15, 23, 42, 0.04);
+
+    z-index: 50;
+}
+
+
+/* =========================================================
+   FOOTER ACTIONS
+   ========================================================= */
+
+.grn-footer-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}
+
+.grn-footer-actions
+.ant-btn {
+    height: 42px;
+
+    padding: 0 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+.grn-footer-actions
+.ant-btn-primary {
+    min-width: 170px;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
+.grn-footer-actions
+.ant-btn:not(.ant-btn-primary):hover {
+    border-color: #1677ff;
+
+    color: #1677ff;
+}
+
+
+/* =========================================================
+   RESPONSIVE - 1200
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .grn-form-grid,
+    .grn-form-grid-3 {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 900
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .grn-drawer-header {
+        padding: 0 18px;
+    }
+
+    .grn-form-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .grn-main-tabs
+    > .ant-tabs-nav {
+        margin-left: -16px;
+        margin-right: -16px;
+
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .grn-tab-content
+    .grn-section-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .grn-drawer {
+        width: 100% !important;
+    }
+
+    .grn-drawer-header {
+        height: 64px;
+        min-height: 64px;
+
+        flex-basis: 64px;
+
+        padding: 0 14px;
+    }
+
+    .grn-drawer-title {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .grn-drawer-subtitle {
+        font-size: 12px;
+    }
+
+    .grn-form-grid,
+    .grn-form-grid-3,
+    .grn-form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .grn-form-item-span-2 {
+        grid-column: auto;
+    }
+
+    .grn-form-body {
+        padding: 0 12px 14px;
+    }
+
+    .grn-main-tabs
+    > .ant-tabs-nav {
+        margin-left: -12px;
+        margin-right: -12px;
+
+        padding-left: 12px;
+        padding-right: 12px;
+
+        overflow-x: auto;
+    }
+
+    .grn-main-tabs
+    > .ant-tabs-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .grn-main-tabs .ant-tabs-tab {
+        flex: 0 0 auto;
+
+        margin-right: 4px !important;
+
+        padding: 13px 10px;
+
+        white-space: nowrap;
+
+        font-size: 13px;
+    }
+
+    .grn-main-tabs
+    .ant-tabs-content-holder {
+        padding-top: 12px;
+    }
+
+    .grn-tab-content
+    .grn-section-header {
+        padding: 0 14px;
+    }
+
+    .grn-tab-content
+    .grn-section-body {
+        padding: 15px 14px 2px;
+    }
+
+    .grn-drawer-footer {
+        height: auto;
+        min-height: 68px;
+
+        flex-basis: auto;
+
+        padding: 10px 12px;
+    }
+
+    .grn-footer-actions {
+        width: 100%;
+
+        gap: 6px;
+    }
+
+    .grn-footer-actions
+    .ant-btn {
+        flex: 1;
+
+        min-width: 0;
+
+        padding: 0 8px;
+
+        font-size: 13px;
+    }
+
+    .grn-footer-actions
+    .ant-btn-primary {
+        min-width: 0;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREEN
+   ========================================================= */
+
+@media (max-width: 450px) {
+
+    .grn-footer-actions {
+        flex-wrap: wrap;
+    }
+
+    .grn-footer-actions
+    .ant-btn {
+        min-height: 40px;
+    }
+
+}
