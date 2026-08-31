@@ -1198,3 +1198,16 @@ textarea.ant-input {
     }
 
 }
+
+/* =========================================================
+   STEP-38
+   ITEM VALIDATION ERROR ROW
+   ========================================================= */
+
+.grn-item-row-error > td {
+    background: #fff2f0 !important;
+}
+
+.grn-item-row-error:hover > td {
+    background: #fff1f0 !important;
+}

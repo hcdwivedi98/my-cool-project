@@ -112,3 +112,8 @@ export * from "./constants/grn.constants";
    ========================================================= */
 
 export * from "./utils/grn.helper";
+
+export {default as grnWorkflow,} from "./utils/grn.workflow";
+
+
+export * from "./utils/grn.workflow";

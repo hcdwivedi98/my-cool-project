@@ -25,6 +25,7 @@ import {
 } from "antd";
 
 import {
+    DatabaseOutlined,
     DeleteOutlined,
     EditOutlined,
     EyeOutlined,
@@ -37,6 +38,14 @@ import GRNDrawer
     from "../components/GRNDrawer";
 
 
+import GRNActionModal
+    from "../components/GRNActionModal";
+
+
+import GRNStockPostingModal
+    from "../components/GRNStockPostingModal";
+
+
 import grnService
     from "../services/grn.service";
 
@@ -46,9 +55,14 @@ import {
 } from "../constants/grn.constants";
 
 
+import {
+    getGRNActions,
+} from "../utils/grn.workflow";
+
+
 /* =========================================================
    STATUS OPTIONS
-   ========================================================= */
+========================================================= */
 
 const STATUS_OPTIONS = [
 
@@ -111,7 +125,7 @@ const STATUS_OPTIONS = [
 
 /* =========================================================
    STATUS COLOR
-   ========================================================= */
+========================================================= */
 
 const getStatusColor = (
     status
@@ -126,27 +140,31 @@ const getStatusColor = (
 
 
     switch (
-        value
+    value
     ) {
 
         case "APPROVED":
         case "POSTED":
         case "COMPLETED":
+
             return "success";
 
 
         case "PENDING_APPROVAL":
         case "SUBMITTED":
+
             return "processing";
 
 
         case "REJECTED":
         case "CANCELLED":
+
             return "error";
 
 
         case "DRAFT":
         default:
+
             return "default";
 
     }
@@ -156,17 +174,28 @@ const getStatusColor = (
 
 /* =========================================================
    STATUS LABEL
-   ========================================================= */
+========================================================= */
 
 const getStatusLabel = (
     status
 ) => {
 
+    const normalizedStatus =
+        String(
+            status ||
+            ""
+        )
+            .toUpperCase();
+
+
     const option =
         STATUS_OPTIONS.find(
             item =>
-                item.value ===
-                status
+                String(
+                    item.value
+                )
+                    .toUpperCase() ===
+                normalizedStatus
         );
 
 
@@ -181,7 +210,7 @@ const getStatusLabel = (
 
 /* =========================================================
    DATE FORMAT
-   ========================================================= */
+========================================================= */
 
 const formatDate = (
     value
@@ -234,7 +263,7 @@ const formatDate = (
 
 /* =========================================================
    PAGE
-   ========================================================= */
+========================================================= */
 
 const GRNPage = () => {
 
@@ -380,6 +409,67 @@ const GRNPage = () => {
 
 
     /* =====================================================
+       GRN ACTION MODAL
+    ===================================================== */
+
+    const [
+        actionModalOpen,
+        setActionModalOpen,
+    ] =
+        useState(
+            false
+        );
+
+
+    const [
+        actionType,
+        setActionType,
+    ] =
+        useState(
+            null
+        );
+
+
+    const [
+        actionRecord,
+        setActionRecord,
+    ] =
+        useState(
+            null
+        );
+
+
+    /* =====================================================
+       GRN STOCK POSTING MODAL
+    ===================================================== */
+
+    const [
+        stockPostingModalOpen,
+        setStockPostingModalOpen,
+    ] =
+        useState(
+            false
+        );
+
+
+    const [
+        stockPostingRecord,
+        setStockPostingRecord,
+    ] =
+        useState(
+            null
+        );
+
+
+    const [
+        stockPostingAction,
+        setStockPostingAction,
+    ] =
+        useState(
+            "POST"
+        );
+
+    /* =====================================================
        LOOKUPS
     ===================================================== */
 
@@ -498,10 +588,9 @@ const GRNPage = () => {
                     )
                 );
 
-
             }
             catch (
-                requestError
+            requestError
             ) {
 
                 console.error(
@@ -510,15 +599,18 @@ const GRNPage = () => {
                 );
 
 
-                setError(
+                const errorMessage =
                     requestError?.message ||
-                    "Unable to load GRN records."
+                    "Unable to load GRN records.";
+
+
+                setError(
+                    errorMessage
                 );
 
 
                 messageApi.error(
-                    requestError?.message ||
-                    "Unable to load GRN records."
+                    errorMessage
                 );
 
             }
@@ -561,23 +653,26 @@ const GRNPage = () => {
        RESET FILTERS
     ===================================================== */
 
-    const handleResetFilters = () => {
+    const handleResetFilters = useCallback(
+        () => {
 
-        setSearch(
-            ""
-        );
-
-        setStatus(
-            undefined
-        );
-
-        setDateRange(
-            []
-        );
+            setSearch(
+                ""
+            );
 
 
-        setPagination(
-            current =>
+            setStatus(
+                undefined
+            );
+
+
+            setDateRange(
+                []
+            );
+
+
+            setPagination(
+                current =>
                 ({
                     ...current,
 
@@ -585,19 +680,22 @@ const GRNPage = () => {
                         1,
 
                 })
-        );
+            );
 
-    };
+        },
+        []
+    );
 
 
     /* =====================================================
        SEARCH
     ===================================================== */
 
-    const handleSearch = () => {
+    const handleSearch = useCallback(
+        () => {
 
-        setPagination(
-            current =>
+            setPagination(
+                current =>
                 ({
                     ...current,
 
@@ -605,299 +703,334 @@ const GRNPage = () => {
                         1,
 
                 })
-        );
+            );
 
-    };
+        },
+        []
+    );
 
 
     /* =====================================================
        TABLE CHANGE
     ===================================================== */
 
-    const handleTableChange = (
-        tablePagination
-    ) => {
+    const handleTableChange = useCallback(
+        (
+            tablePagination
+        ) => {
 
-        setPagination({
+            setPagination({
 
-            current:
-                tablePagination.current,
+                current:
+                    tablePagination.current,
 
-            pageSize:
-                tablePagination.pageSize,
+                pageSize:
+                    tablePagination.pageSize,
 
-        });
+            });
 
-    };
+        },
+        []
+    );
 
 
     /* =====================================================
        OPEN CREATE
     ===================================================== */
 
-    const handleCreate = () => {
+    const handleCreate = useCallback(
+        () => {
 
-        setSelectedRecord(
-            null
-        );
-
-
-        setAuditTrail(
-            []
-        );
+            setSelectedRecord(
+                null
+            );
 
 
-        setDrawerMode(
-            "CREATE"
-        );
+            setAuditTrail(
+                []
+            );
 
 
-        setDrawerOpen(
-            true
-        );
+            setDrawerMode(
+                "CREATE"
+            );
 
-    };
+
+            setDrawerOpen(
+                true
+            );
+
+        },
+        []
+    );
 
 
     /* =====================================================
        OPEN VIEW
     ===================================================== */
 
-    const handleView = async (
-        record
-    ) => {
+    const handleView = useCallback(
+        async (
+            record
+        ) => {
 
-        setActionLoading(
-            true
-        );
-
-
-        try {
-
-            let fullRecord =
-                record;
+            setActionLoading(
+                true
+            );
 
 
-            if (
-                record?.id
-            ) {
+            try {
 
-                try {
-
-                    const response =
-                        await grnService.getById(
-                            record.id
-                        );
+                let fullRecord =
+                    record;
 
 
-                    if (
-                        response
+                if (
+                    record?.id
+                ) {
+
+                    try {
+
+                        const response =
+                            await grnService.getById(
+                                record.id
+                            );
+
+
+                        if (
+                            response
+                        ) {
+
+                            fullRecord =
+                                response;
+
+                        }
+
+                    }
+                    catch (
+                    detailError
                     ) {
 
-                        fullRecord =
-                            response;
+                        console.warn(
+                            "Unable to load GRN detail. Using table record.",
+                            detailError
+                        );
 
                     }
 
                 }
-                catch (
-                    detailError
-                ) {
 
-                    console.warn(
-                        "Unable to load GRN detail. Using table record.",
-                        detailError
-                    );
 
-                }
+                setSelectedRecord(
+                    fullRecord
+                );
+
+
+                setAuditTrail(
+                    Array.isArray(
+                        fullRecord?.auditTrail
+                    )
+                        ? fullRecord.auditTrail
+                        : []
+                );
+
+
+                setDrawerMode(
+                    "VIEW"
+                );
+
+
+                setDrawerOpen(
+                    true
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
 
             }
 
-
-            setSelectedRecord(
-                fullRecord
-            );
-
-
-            setAuditTrail(
-                Array.isArray(
-                    fullRecord?.auditTrail
-                )
-                    ? fullRecord.auditTrail
-                    : []
-            );
-
-
-            setDrawerMode(
-                "VIEW"
-            );
-
-
-            setDrawerOpen(
-                true
-            );
-
-        }
-        finally {
-
-            setActionLoading(
-                false
-            );
-
-        }
-
-    };
+        },
+        []
+    );
 
 
     /* =====================================================
        OPEN EDIT
     ===================================================== */
 
-    const handleEdit = async (
-        record
-    ) => {
+    const handleEdit = useCallback(
+        async (
+            record
+        ) => {
 
-        setActionLoading(
-            true
-        );
-
-
-        try {
-
-            let fullRecord =
-                record;
+            setActionLoading(
+                true
+            );
 
 
-            if (
-                record?.id
-            ) {
+            try {
 
-                try {
-
-                    const response =
-                        await grnService.getById(
-                            record.id
-                        );
+                let fullRecord =
+                    record;
 
 
-                    if (
-                        response
+                if (
+                    record?.id
+                ) {
+
+                    try {
+
+                        const response =
+                            await grnService.getById(
+                                record.id
+                            );
+
+
+                        if (
+                            response
+                        ) {
+
+                            fullRecord =
+                                response;
+
+                        }
+
+                    }
+                    catch (
+                    detailError
                     ) {
 
-                        fullRecord =
-                            response;
+                        console.warn(
+                            "Unable to load GRN detail. Using table record.",
+                            detailError
+                        );
 
                     }
 
                 }
-                catch (
-                    detailError
-                ) {
 
-                    console.warn(
-                        "Unable to load GRN detail. Using table record.",
-                        detailError
-                    );
 
-                }
+                setSelectedRecord(
+                    fullRecord
+                );
+
+
+                setAuditTrail(
+                    Array.isArray(
+                        fullRecord?.auditTrail
+                    )
+                        ? fullRecord.auditTrail
+                        : []
+                );
+
+
+                setDrawerMode(
+                    "EDIT"
+                );
+
+
+                setDrawerOpen(
+                    true
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
 
             }
 
-
-            setSelectedRecord(
-                fullRecord
-            );
-
-
-            setAuditTrail(
-                Array.isArray(
-                    fullRecord?.auditTrail
-                )
-                    ? fullRecord.auditTrail
-                    : []
-            );
-
-
-            setDrawerMode(
-                "EDIT"
-            );
-
-
-            setDrawerOpen(
-                true
-            );
-
-        }
-        finally {
-
-            setActionLoading(
-                false
-            );
-
-        }
-
-    };
+        },
+        []
+    );
 
 
     /* =====================================================
        CLOSE DRAWER
     ===================================================== */
 
-    const handleDrawerClose = () => {
+    const handleDrawerClose = useCallback(
+        () => {
 
-        setDrawerOpen(
-            false
-        );
+            if (
+                actionLoading
+            ) {
+
+                return;
+
+            }
 
 
-        setSelectedRecord(
-            null
-        );
+            setDrawerOpen(
+                false
+            );
 
 
-        setAuditTrail(
-            []
-        );
+            setSelectedRecord(
+                null
+            );
 
-    };
+
+            setAuditTrail(
+                []
+            );
+
+        },
+        [
+            actionLoading,
+        ]
+    );
 
 
     /* =====================================================
        SAVE DRAFT
     ===================================================== */
 
-    const handleSaveDraft = async (
-        payload
-    ) => {
+    const handleSaveDraft = useCallback(
+        async (
+            payload
+        ) => {
 
-        setActionLoading(
-            true
-        );
-
-
-        try {
-
-            await grnService.saveDraft(
-                payload
+            setActionLoading(
+                true
             );
 
 
-            messageApi.success(
-                "GRN draft saved successfully."
-            );
+            try {
+
+                await grnService.saveDraft(
+                    payload
+                );
 
 
-            handleDrawerClose();
+                messageApi.success(
+                    "GRN draft saved successfully."
+                );
 
 
-            await loadData({
-                page:
-                    1,
-            });
+                setDrawerOpen(
+                    false
+                );
 
 
-            setPagination(
-                current =>
+                setSelectedRecord(
+                    null
+                );
+
+
+                setAuditTrail(
+                    []
+                );
+
+
+                setPagination(
+                    current =>
                     ({
                         ...current,
 
@@ -905,72 +1038,90 @@ const GRNPage = () => {
                             1,
 
                     })
-            );
+                );
 
-        }
-        catch (
+
+                await loadData({
+                    page:
+                        1,
+                });
+
+            }
+            catch (
             saveError
-        ) {
+            ) {
 
-            console.error(
-                "GRN save error:",
-                saveError
-            );
+                console.error(
+                    "GRN save error:",
+                    saveError
+                );
 
 
-            messageApi.error(
-                saveError?.message ||
-                "Unable to save GRN."
-            );
+                messageApi.error(
+                    saveError?.message ||
+                    "Unable to save GRN."
+                );
 
-        }
-        finally {
+            }
+            finally {
 
-            setActionLoading(
-                false
-            );
+                setActionLoading(
+                    false
+                );
 
-        }
+            }
 
-    };
+        },
+        [
+            loadData,
+            messageApi,
+        ]
+    );
 
 
     /* =====================================================
-       SUBMIT
+       SUBMIT FROM DRAWER
     ===================================================== */
 
-    const handleSubmit = async (
-        payload
-    ) => {
+    const handleSubmit = useCallback(
+        async (
+            payload
+        ) => {
 
-        setActionLoading(
-            true
-        );
-
-
-        try {
-
-            await grnService.submit(
-                payload
+            setActionLoading(
+                true
             );
 
 
-            messageApi.success(
-                "GRN submitted successfully."
-            );
+            try {
+
+                await grnService.submit(
+                    payload
+                );
 
 
-            handleDrawerClose();
+                messageApi.success(
+                    "GRN submitted successfully."
+                );
 
 
-            await loadData({
-                page:
-                    1,
-            });
+                setDrawerOpen(
+                    false
+                );
 
 
-            setPagination(
-                current =>
+                setSelectedRecord(
+                    null
+                );
+
+
+                setAuditTrail(
+                    []
+                );
+
+
+                setPagination(
+                    current =>
                     ({
                         ...current,
 
@@ -978,102 +1129,798 @@ const GRNPage = () => {
                             1,
 
                     })
-            );
+                );
 
-        }
-        catch (
+
+                await loadData({
+                    page:
+                        1,
+                });
+
+            }
+            catch (
             submitError
-        ) {
+            ) {
 
-            console.error(
-                "GRN submit error:",
-                submitError
+                console.error(
+                    "GRN submit error:",
+                    submitError
+                );
+
+
+                messageApi.error(
+                    submitError?.message ||
+                    "Unable to submit GRN."
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
+
+            }
+
+        },
+        [
+            loadData,
+            messageApi,
+        ]
+    );
+
+
+    /* =====================================================
+       OPEN WORKFLOW ACTION MODAL
+    ===================================================== */
+
+    const handleOpenAction = useCallback(
+        (
+            action,
+            record
+        ) => {
+
+            if (
+                !record
+            ) {
+
+                return;
+
+            }
+
+
+            const allowedActions =
+                getGRNActions(
+                    record
+                );
+
+
+            if (
+                !Array.isArray(
+                    allowedActions
+                ) ||
+                !allowedActions.includes(
+                    action
+                )
+            ) {
+
+                messageApi.warning(
+                    "This action is not available for the current GRN status."
+                );
+
+                return;
+
+            }
+
+
+            setActionType(
+                action
             );
 
 
-            messageApi.error(
-                submitError?.message ||
-                "Unable to submit GRN."
+            setActionRecord(
+                record
             );
 
-        }
-        finally {
 
-            setActionLoading(
+            setActionModalOpen(
+                true
+            );
+
+        },
+        [
+            messageApi,
+        ]
+    );
+
+
+    /* =====================================================
+       CLOSE WORKFLOW ACTION MODAL
+    ===================================================== */
+
+    const handleCloseActionModal = useCallback(
+        () => {
+
+            if (
+                actionLoading
+            ) {
+
+                return;
+
+            }
+
+
+            setActionModalOpen(
                 false
             );
 
-        }
 
-    };
+            setActionType(
+                null
+            );
 
+
+            setActionRecord(
+                null
+            );
+
+        },
+        [
+            actionLoading,
+        ]
+    );
+
+
+    /* =====================================================
+       EXECUTE GRN WORKFLOW ACTION
+    ===================================================== */
+
+    const handleGRNAction = useCallback(
+        async ({
+            action,
+            grn,
+            remarks = "",
+        }) => {
+
+            if (
+                !grn?.id
+            ) {
+
+                messageApi.error(
+                    "GRN id is missing."
+                );
+
+                return;
+
+            }
+
+
+            setActionLoading(
+                true
+            );
+
+
+            try {
+
+                const payload = {
+
+                    id:
+                        grn.id,
+
+                    grnId:
+                        grn.id,
+
+                    remarks:
+                        remarks ||
+                        "",
+
+                    action:
+                        action,
+
+                };
+
+
+                switch (
+                action
+                ) {
+
+                    /* -------------------------------------
+                       SUBMIT
+                    ------------------------------------- */
+
+                    case "SUBMIT":
+
+                        if (
+                            typeof grnService.submit !==
+                            "function"
+                        ) {
+
+                            throw new Error(
+                                "GRN submit service is not available."
+                            );
+
+                        }
+
+
+                        await grnService.submit(
+                            payload
+                        );
+
+                        break;
+
+
+                    /* -------------------------------------
+                       APPROVE
+                    ------------------------------------- */
+
+                    case "APPROVE":
+
+                        if (
+                            typeof grnService.approve !==
+                            "function"
+                        ) {
+
+                            throw new Error(
+                                "GRN approve service is not available."
+                            );
+
+                        }
+
+
+                        await grnService.approve(
+                            grn.id,
+                            payload
+                        );
+
+                        break;
+
+
+                    /* -------------------------------------
+                       REJECT
+                    ------------------------------------- */
+
+                    case "REJECT":
+
+                        if (
+                            typeof grnService.reject !==
+                            "function"
+                        ) {
+
+                            throw new Error(
+                                "GRN reject service is not available."
+                            );
+
+                        }
+
+
+                        await grnService.reject(
+                            grn.id,
+                            payload
+                        );
+
+                        break;
+
+
+                    /* -------------------------------------
+                       DEFAULT
+                    ------------------------------------- */
+
+                    default:
+
+                        throw new Error(
+                            `Unsupported GRN action: ${action}`
+                        );
+
+                }
+
+
+                const successMessages = {
+
+                    SUBMIT:
+                        "GRN submitted successfully.",
+
+                    APPROVE:
+                        "GRN approved successfully.",
+
+                    REJECT:
+                        "GRN rejected successfully.",
+
+                };
+
+
+                messageApi.success(
+                    successMessages[action] ||
+                    "GRN action completed successfully."
+                );
+
+
+                setActionModalOpen(
+                    false
+                );
+
+
+                setActionType(
+                    null
+                );
+
+
+                setActionRecord(
+                    null
+                );
+
+
+                await loadData();
+
+            }
+            catch (
+            workflowError
+            ) {
+
+                console.error(
+                    "GRN workflow action error:",
+                    workflowError
+                );
+
+
+                messageApi.error(
+                    workflowError?.message ||
+                    "Unable to process GRN action."
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
+
+            }
+
+        },
+        [
+            loadData,
+            messageApi,
+        ]
+    );
+
+
+    /* =====================================================
+   OPEN STOCK POSTING
+===================================================== */
+
+    const handleOpenStockPosting = useCallback(
+        (
+            record
+        ) => {
+
+            if (
+                !record
+            ) {
+
+                return;
+
+            }
+
+
+            const status =
+                String(
+                    record?.status ||
+                    ""
+                )
+                    .toUpperCase();
+
+
+            const stockStatus =
+                String(
+                    record?.stockPostingStatus ||
+                    record?.stockPosting?.status ||
+                    record?.stockPostingStatusCode ||
+                    "NOT_POSTED"
+                )
+                    .toUpperCase();
+
+
+            if (
+                status !==
+                "APPROVED"
+            ) {
+
+                messageApi.warning(
+                    "Stock can only be posted for an approved GRN."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                stockStatus ===
+                "POSTED"
+            ) {
+
+                messageApi.info(
+                    "Stock has already been posted for this GRN."
+                );
+
+                return;
+
+            }
+
+
+            setStockPostingRecord(
+                record
+            );
+
+
+            setStockPostingAction(
+                stockStatus ===
+                    "FAILED"
+                    ? "RETRY"
+                    : "POST"
+            );
+
+
+            setStockPostingModalOpen(
+                true
+            );
+
+        },
+        [
+            messageApi,
+        ]
+    );
+
+    /* =====================================================
+   CLOSE STOCK POSTING MODAL
+===================================================== */
+
+    const handleCloseStockPosting = useCallback(
+        () => {
+
+            if (
+                actionLoading
+            ) {
+
+                return;
+
+            }
+
+
+            setStockPostingModalOpen(
+                false
+            );
+
+
+            setStockPostingRecord(
+                null
+            );
+
+
+            setStockPostingAction(
+                "POST"
+            );
+
+        },
+        [
+            actionLoading,
+        ]
+    );
+
+    /* =====================================================
+       POST / RETRY STOCK
+    ===================================================== */
+
+    const handlePostToInventory = useCallback(
+        async (
+            values = {}
+        ) => {
+
+            const record =
+                stockPostingRecord;
+
+
+            if (
+                !record?.id
+            ) {
+
+                messageApi.error(
+                    "GRN id is missing."
+                );
+
+                return;
+
+            }
+
+
+            const action =
+                stockPostingAction;
+
+
+            setActionLoading(
+                true
+            );
+
+
+            try {
+
+                const payload = {
+
+                    ...values,
+
+                    id:
+                        record.id,
+
+                    grnId:
+                        record.id,
+
+                    action:
+                        action ===
+                            "RETRY"
+                            ? "RETRY_POST_STOCK"
+                            : "POST_STOCK",
+
+                };
+
+
+                let response;
+
+
+                /* =========================================
+                   RETRY
+                ========================================= */
+
+                if (
+                    action ===
+                    "RETRY"
+                ) {
+
+                    if (
+                        typeof grnService.retryStockPosting !==
+                        "function"
+                    ) {
+
+                        throw new Error(
+                            "GRN retry stock posting service is not available."
+                        );
+
+                    }
+
+
+                    response =
+                        await grnService.retryStockPosting(
+                            record.id,
+                            payload
+                        );
+
+                }
+
+
+                /* =========================================
+                   FIRST POST
+                ========================================= */
+
+                else {
+
+                    if (
+                        typeof grnService.postStock !==
+                        "function"
+                    ) {
+
+                        throw new Error(
+                            "GRN stock posting service is not available."
+                        );
+
+                    }
+
+
+                    response =
+                        await grnService.postStock(
+                            record.id,
+                            payload
+                        );
+
+                }
+
+
+                console.log(
+                    "GRN stock posting response:",
+                    response
+                );
+
+
+                let verifiedStatus = null;
+
+                if (
+                    typeof grnService.getStockPostingStatus ===
+                    "function"
+                ) {
+
+                    try {
+
+                        verifiedStatus =
+                            await grnService.getStockPostingStatus(
+                                record.id
+                            );
+
+                    }
+                    catch (
+                    statusError
+                    ) {
+
+                        console.warn(
+                            "Unable to verify GRN stock posting status.",
+                            statusError
+                        );
+
+                    }
+
+                }
+
+                const finalStockStatus =
+                    String(
+                        verifiedStatus?.stockPostingStatus ||
+                        verifiedStatus?.status ||
+                        response?.stockPostingStatus ||
+                        response?.status ||
+                        ""
+                    )
+                        .toUpperCase();
+
+
+                if (
+                    finalStockStatus ===
+                    "FAILED"
+                ) {
+
+                    throw new Error(
+                        verifiedStatus?.message ||
+                        response?.message ||
+                        "Stock posting failed."
+                    );
+
+                }
+
+
+                messageApi.success(
+                    action ===
+                        "RETRY"
+                        ? "GRN stock posting retried successfully."
+                        : "GRN stock posted successfully."
+                );
+
+
+                /* =========================================
+                   CLOSE MODAL
+                ========================================= */
+
+                setStockPostingModalOpen(
+                    false
+                );
+
+
+                setStockPostingRecord(
+                    null
+                );
+
+
+                setStockPostingAction(
+                    "POST"
+                );
+
+
+                /* =========================================
+                   REFRESH LIST
+                ========================================= */
+
+                await loadData();
+
+            }
+            catch (
+            stockError
+            ) {
+
+                console.error(
+                    "GRN stock posting error:",
+                    stockError
+                );
+
+
+                messageApi.error(
+                    stockError?.message ||
+                    "Unable to post GRN stock."
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
+
+            }
+
+        },
+        [
+            stockPostingRecord,
+            stockPostingAction,
+            messageApi,
+            loadData,
+        ]
+    );
 
     /* =====================================================
        DELETE
     ===================================================== */
 
-    const handleDelete = async (
-        record
-    ) => {
+    const handleDelete = useCallback(
+        async (
+            record
+        ) => {
 
-        if (
-            !record?.id
-        ) {
+            if (
+                !record?.id
+            ) {
 
-            messageApi.error(
-                "GRN id is missing."
-            );
+                messageApi.error(
+                    "GRN id is missing."
+                );
 
-            return;
+                return;
 
-        }
+            }
 
-
-        setActionLoading(
-            true
-        );
-
-
-        try {
-
-            await grnService.remove(
-                record.id
-            );
-
-
-            messageApi.success(
-                "GRN deleted successfully."
-            );
-
-
-            await loadData();
-
-        }
-        catch (
-            deleteError
-        ) {
-
-            console.error(
-                "GRN delete error:",
-                deleteError
-            );
-
-
-            messageApi.error(
-                deleteError?.message ||
-                "Unable to delete GRN."
-            );
-
-        }
-        finally {
 
             setActionLoading(
-                false
+                true
             );
 
-        }
 
-    };
+            try {
+
+                await grnService.remove(
+                    record.id
+                );
+
+
+                messageApi.success(
+                    "GRN deleted successfully."
+                );
+
+
+                await loadData();
+
+            }
+            catch (
+            deleteError
+            ) {
+
+                console.error(
+                    "GRN delete error:",
+                    deleteError
+                );
+
+
+                messageApi.error(
+                    deleteError?.message ||
+                    "Unable to delete GRN."
+                );
+
+            }
+            finally {
+
+                setActionLoading(
+                    false
+                );
+
+            }
+
+        },
+        [
+            loadData,
+            messageApi,
+        ]
+    );
 
 
     /* =====================================================
@@ -1083,6 +1930,10 @@ const GRNPage = () => {
     const columns =
         useMemo(
             () => [
+
+                /* -----------------------------------------
+                   GRN NUMBER
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1120,6 +1971,10 @@ const GRNPage = () => {
                 },
 
 
+                /* -----------------------------------------
+                   GRN DATE
+                ----------------------------------------- */
+
                 {
                     title:
                         "GRN Date",
@@ -1138,6 +1993,10 @@ const GRNPage = () => {
 
                 },
 
+
+                /* -----------------------------------------
+                   PURCHASE ORDER
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1159,6 +2018,10 @@ const GRNPage = () => {
 
                 },
 
+
+                /* -----------------------------------------
+                   SUPPLIER
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1193,6 +2056,7 @@ const GRNPage = () => {
                                     }
                                 </div>
 
+
                                 {
                                     record?.supplierCode && (
 
@@ -1220,6 +2084,10 @@ const GRNPage = () => {
                 },
 
 
+                /* -----------------------------------------
+                   INVOICE
+                ----------------------------------------- */
+
                 {
                     title:
                         "Invoice No.",
@@ -1241,6 +2109,10 @@ const GRNPage = () => {
                 },
 
 
+                /* -----------------------------------------
+                   STORE
+                ----------------------------------------- */
+
                 {
                     title:
                         "Store",
@@ -1261,6 +2133,10 @@ const GRNPage = () => {
 
                 },
 
+
+                /* -----------------------------------------
+                   ITEMS
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1290,6 +2166,10 @@ const GRNPage = () => {
                 },
 
 
+                /* -----------------------------------------
+                   QUANTITY
+                ----------------------------------------- */
+
                 {
                     title:
                         "Quantity",
@@ -1317,6 +2197,10 @@ const GRNPage = () => {
 
                 },
 
+
+                /* -----------------------------------------
+                   AMOUNT
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1364,6 +2248,10 @@ const GRNPage = () => {
                 },
 
 
+                /* -----------------------------------------
+                   STATUS
+                ----------------------------------------- */
+
                 {
                     title:
                         "Status",
@@ -1398,6 +2286,104 @@ const GRNPage = () => {
 
                 },
 
+                /* -----------------------------------------
+   STOCK POSTING STATUS
+----------------------------------------- */
+
+                {
+                    title:
+                        "Stock Posting",
+
+                    key:
+                        "stockPostingStatus",
+
+                    width:
+                        150,
+
+                    align:
+                        "center",
+
+                    render:
+                        (
+                            _,
+                            record
+                        ) => {
+
+                            const stockPostingStatus =
+                                String(
+                                    record?.stockPostingStatus ||
+                                    record?.stockPosting?.status ||
+                                    record?.stockPostingStatusCode ||
+                                    "NOT_POSTED"
+                                )
+                                    .toUpperCase();
+
+
+                            switch (
+                            stockPostingStatus
+                            ) {
+
+                                case "POSTED":
+
+                                    return (
+
+                                        <Tag
+                                            color="success"
+                                        >
+                                            Posted
+                                        </Tag>
+
+                                    );
+
+
+                                case "PENDING":
+
+                                    return (
+
+                                        <Tag
+                                            color="processing"
+                                        >
+                                            Posting...
+                                        </Tag>
+
+                                    );
+
+
+                                case "FAILED":
+
+                                    return (
+
+                                        <Tag
+                                            color="error"
+                                        >
+                                            Failed
+                                        </Tag>
+
+                                    );
+
+
+                                case "NOT_POSTED":
+
+                                default:
+
+                                    return (
+
+                                        <Tag>
+                                            Not Posted
+                                        </Tag>
+
+                                    );
+
+                            }
+
+                        },
+
+                },
+
+
+                /* -----------------------------------------
+                   ACTIONS
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1407,7 +2393,7 @@ const GRNPage = () => {
                         "actions",
 
                     width:
-                        130,
+                        340,
 
                     fixed:
                         "right",
@@ -1416,121 +2402,82 @@ const GRNPage = () => {
                         (
                             _,
                             record
-                        ) => (
+                        ) => {
 
-                            <Space
-                                size="small"
-                            >
+                            const workflowActions =
+                                getGRNActions(
+                                    record
+                                );
 
-                                <Tooltip
-                                    title="View"
+
+                            const statusValue =
+                                String(
+                                    record?.status ||
+                                    ""
+                                )
+                                    .toUpperCase();
+
+
+                            const isFinal =
+                                [
+                                    "POSTED",
+                                    "CANCELLED",
+                                    "COMPLETED",
+                                ].includes(
+                                    statusValue
+                                );
+
+                            const stockPostingStatus =
+                                String(
+                                    record?.stockPostingStatus ||
+                                    record?.stockPosting?.status ||
+                                    record?.stockPostingStatusCode ||
+                                    "NOT_POSTED"
+                                )
+                                    .toUpperCase();
+
+
+                            const canPostStock =
+                                statusValue ===
+                                "APPROVED" &&
+                                [
+                                    "NOT_POSTED",
+                                    "FAILED",
+                                ].includes(
+                                    stockPostingStatus
+                                );
+
+
+                            const isStockPostingFailed =
+                                stockPostingStatus ===
+                                "FAILED";
+
+                            return (
+
+                                <Space
+                                    size="small"
+                                    wrap
                                 >
 
-                                    <Button
-
-                                        type="text"
-
-                                        icon={
-                                            <EyeOutlined />
-                                        }
-
-                                        onClick={() =>
-                                            handleView(
-                                                record
-                                            )
-                                        }
-
-                                    />
-
-                                </Tooltip>
-
-
-                                <Tooltip
-                                    title="Edit"
-                                >
-
-                                    <Button
-
-                                        type="text"
-
-                                        icon={
-                                            <EditOutlined />
-                                        }
-
-                                        disabled={
-                                            [
-                                                "POSTED",
-                                                "CANCELLED",
-                                                "COMPLETED",
-                                            ].includes(
-                                                String(
-                                                    record?.status ||
-                                                    ""
-                                                )
-                                                    .toUpperCase()
-                                            )
-                                        }
-
-                                        onClick={() =>
-                                            handleEdit(
-                                                record
-                                            )
-                                        }
-
-                                    />
-
-                                </Tooltip>
-
-
-                                <Popconfirm
-
-                                    title="Delete GRN"
-
-                                    description={
-                                        "Are you sure you want to delete this GRN?"
-                                    }
-
-                                    okText="Delete"
-
-                                    cancelText="Cancel"
-
-                                    okButtonProps={{
-                                        danger:
-                                            true,
-                                    }}
-
-                                    onConfirm={() =>
-                                        handleDelete(
-                                            record
-                                        )
-                                    }
-
-                                >
+                                    {/* =================
+                                        VIEW
+                                    ================= */}
 
                                     <Tooltip
-                                        title="Delete"
+                                        title="View"
                                     >
 
                                         <Button
 
-                                            danger
-
                                             type="text"
 
                                             icon={
-                                                <DeleteOutlined />
+                                                <EyeOutlined />
                                             }
 
-                                            disabled={
-                                                ![
-                                                    "DRAFT",
-                                                    "REJECTED",
-                                                ].includes(
-                                                    String(
-                                                        record?.status ||
-                                                        ""
-                                                    )
-                                                        .toUpperCase()
+                                            onClick={() =>
+                                                handleView(
+                                                    record
                                                 )
                                             }
 
@@ -1538,21 +2485,307 @@ const GRNPage = () => {
 
                                     </Tooltip>
 
-                                </Popconfirm>
 
-                            </Space>
+                                    {/* =================
+                                        EDIT
+                                    ================= */}
 
-                        ),
+                                    {
+                                        workflowActions.includes(
+                                            "EDIT"
+                                        ) &&
+                                        !isFinal && (
+
+                                            <Tooltip
+                                                title="Edit"
+                                            >
+
+                                                <Button
+
+                                                    type="text"
+
+                                                    icon={
+                                                        <EditOutlined />
+                                                    }
+
+                                                    onClick={() =>
+                                                        handleEdit(
+                                                            record
+                                                        )
+                                                    }
+
+                                                />
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+
+                                    {/* =================
+                                        SUBMIT
+                                    ================= */}
+
+                                    {
+                                        workflowActions.includes(
+                                            "SUBMIT"
+                                        ) && (
+
+                                            <Tooltip
+                                                title="Submit for Approval"
+                                            >
+
+                                                <Button
+
+                                                    type="text"
+
+                                                    onClick={() =>
+                                                        handleOpenAction(
+                                                            "SUBMIT",
+                                                            record
+                                                        )
+                                                    }
+
+                                                >
+                                                    Submit
+                                                </Button>
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+
+                                    {/* =================
+                                        APPROVE
+                                    ================= */}
+
+                                    {
+                                        workflowActions.includes(
+                                            "APPROVE"
+                                        ) && (
+
+                                            <Tooltip
+                                                title="Approve"
+                                            >
+
+                                                <Button
+
+                                                    type="text"
+
+                                                    onClick={() =>
+                                                        handleOpenAction(
+                                                            "APPROVE",
+                                                            record
+                                                        )
+                                                    }
+
+                                                >
+                                                    Approve
+                                                </Button>
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+
+                                    {/* =================
+                                        REJECT
+                                    ================= */}
+
+                                    {
+                                        workflowActions.includes(
+                                            "REJECT"
+                                        ) && (
+
+                                            <Tooltip
+                                                title="Reject"
+                                            >
+
+                                                <Button
+
+                                                    danger
+
+                                                    type="text"
+
+                                                    onClick={() =>
+                                                        handleOpenAction(
+                                                            "REJECT",
+                                                            record
+                                                        )
+                                                    }
+
+                                                >
+                                                    Reject
+                                                </Button>
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+
+                                    {/* =================
+                                        POST TO INVENTORY
+                                    ================= */}
+
+                                    {
+                                        canPostStock && (
+
+                                            <Tooltip
+                                                title={
+                                                    isStockPostingFailed
+                                                        ? "Retry stock posting"
+                                                        : "Post received stock to inventory"
+                                                }
+                                            >
+
+                                                <Button
+
+                                                    type="text"
+
+                                                    icon={
+                                                        <DatabaseOutlined />
+                                                    }
+
+                                                    onClick={() =>
+                                                        handleOpenStockPosting(
+                                                            record
+                                                        )
+                                                    }
+
+                                                >
+                                                    {
+                                                        isStockPostingFailed
+                                                            ? "Retry"
+                                                            : "Post Stock"
+                                                    }
+
+                                                </Button>
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+                                    {
+                                        canPostStock && (
+
+                                            <Tooltip
+                                                title={
+                                                    isStockPostingFailed
+                                                        ? "Retry stock posting"
+                                                        : "Post received stock to inventory"
+                                                }
+                                            >
+
+                                                <Button
+
+                                                    type="text"
+
+                                                    onClick={() =>
+                                                        handleOpenStockPosting(
+                                                            record
+                                                        )
+                                                    }
+
+                                                >
+                                                    {
+                                                        isStockPostingFailed
+                                                            ? "Retry"
+                                                            : "Post Stock"
+                                                    }
+
+                                                </Button>
+
+                                            </Tooltip>
+
+                                        )
+                                    }
+
+
+                                    {/* =================
+                                        DELETE
+                                    ================= */}
+
+                                    {
+                                        [
+                                            "DRAFT",
+                                            "REJECTED",
+                                        ].includes(
+                                            statusValue
+                                        ) && (
+
+                                            <Popconfirm
+
+                                                title="Delete GRN"
+
+                                                description={
+                                                    "Are you sure you want to delete this GRN?"
+                                                }
+
+                                                okText="Delete"
+
+                                                cancelText="Cancel"
+
+                                                okButtonProps={{
+                                                    danger:
+                                                        true,
+                                                }}
+
+                                                onConfirm={() =>
+                                                    handleDelete(
+                                                        record
+                                                    )
+                                                }
+
+                                            >
+
+                                                <Tooltip
+                                                    title="Delete"
+                                                >
+
+                                                    <Button
+
+                                                        danger
+
+                                                        type="text"
+
+                                                        icon={
+                                                            <DeleteOutlined />
+                                                        }
+
+                                                    />
+
+                                                </Tooltip>
+
+                                            </Popconfirm>
+
+                                        )
+                                    }
+
+                                </Space>
+
+                            );
+
+                        },
 
                 },
 
             ],
-            []
+            [
+                handleView,
+                handleEdit,
+                handleDelete,
+                handleOpenAction,
+                handleOpenStockPosting,
+            ]
         );
 
 
     /* =====================================================
-       CREATE TITLE
+       RENDER
     ===================================================== */
 
     return (
@@ -1602,6 +2835,7 @@ const GRNPage = () => {
                         >
                             Goods Receipt Notes
                         </div>
+
 
                         <div
                             style={{
@@ -1777,13 +3011,13 @@ const GRNPage = () => {
 
                                     setPagination(
                                         current =>
-                                            ({
-                                                ...current,
+                                        ({
+                                            ...current,
 
-                                                current:
-                                                    1,
+                                            current:
+                                                1,
 
-                                            })
+                                        })
                                     );
 
                                 }
@@ -1847,18 +3081,19 @@ const GRNPage = () => {
 
 
                             <Button
+
                                 icon={
                                     <ReloadOutlined />
                                 }
 
-                                onClick={
-                                    () =>
-                                        loadData()
+                                onClick={() =>
+                                    loadData()
                                 }
 
                                 loading={
                                     loading
                                 }
+
                             >
                                 Refresh
                             </Button>
@@ -1914,7 +3149,7 @@ const GRNPage = () => {
 
                     scroll={{
                         x:
-                            1500,
+                            1800,
                     }}
 
                     pagination={{
@@ -1949,7 +3184,7 @@ const GRNPage = () => {
 
 
             {/* =================================================
-                DRAWER
+                GRN DRAWER
             ================================================= */}
 
             <GRNDrawer
@@ -2019,6 +3254,72 @@ const GRNPage = () => {
 
                 onSaveDraft={
                     handleSaveDraft
+                }
+
+            />
+
+
+            {/* =================================================
+                GRN WORKFLOW ACTION MODAL
+            ================================================= */}
+
+            <GRNActionModal
+
+                open={
+                    actionModalOpen
+                }
+
+                action={
+                    actionType
+                }
+
+                grn={
+                    actionRecord
+                }
+
+                loading={
+                    actionLoading
+                }
+
+                onConfirm={
+                    handleGRNAction
+                }
+
+                onCancel={
+                    handleCloseActionModal
+                }
+
+            />
+
+
+            {/* =================================================
+    GRN STOCK POSTING MODAL
+================================================= */}
+
+            <GRNStockPostingModal
+
+                open={
+                    stockPostingModalOpen
+                }
+
+                grn={
+                    stockPostingRecord
+                }
+
+                action={
+                    stockPostingAction
+                }
+
+                loading={
+                    actionLoading
+                }
+
+                onConfirm={
+                    handlePostToInventory
+                }
+
+                onCancel={
+                    handleCloseStockPosting
                 }
 
             />

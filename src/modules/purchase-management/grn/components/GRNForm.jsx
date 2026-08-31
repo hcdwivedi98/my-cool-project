@@ -92,15 +92,21 @@ const DEFAULT_VALUES = {
    NORMALIZE INITIAL VALUES
    ========================================================= */
 
-const normalizeInitialValues = (values = {}) => {
+const normalizeInitialValues = (
+    values = {}
+) => {
+
     const safeValues =
         values &&
             typeof values === "object"
             ? values
             : {};
 
+
     return {
+
         ...DEFAULT_VALUES,
+
         ...safeValues,
 
         status:
@@ -112,10 +118,14 @@ const normalizeInitialValues = (values = {}) => {
             DEFAULT_VALUES.currency,
 
         items:
-            Array.isArray(safeValues.items)
+            Array.isArray(
+                safeValues.items
+            )
                 ? safeValues.items
                 : [],
+
     };
+
 };
 
 
@@ -124,6 +134,7 @@ const normalizeInitialValues = (values = {}) => {
    ========================================================= */
 
 const GRNForm = ({
+
     mode = "CREATE",
 
     initialValues = {},
@@ -139,9 +150,13 @@ const GRNForm = ({
     onCancel,
 
     onClose,
+
 }) => {
 
-    const [form] = Form.useForm();
+    const [
+        form
+    ] =
+        Form.useForm();
 
 
     /* =====================================================
@@ -151,7 +166,28 @@ const GRNForm = ({
     const [
         submitAction,
         setSubmitAction,
-    ] = useState("SAVE");
+    ] =
+        useState(
+            "SAVE"
+        );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * submitAction state UI/loading ke liye hai.
+     *
+     * actual submit action ko ref ke through
+     * synchronously maintain karenge.
+     */
+
+    const [
+        actionRef
+    ] =
+        React.useState({
+            current:
+                "SAVE",
+        });
 
 
     /* =====================================================
@@ -161,7 +197,10 @@ const GRNForm = ({
     const [
         validationErrors,
         setValidationErrors,
-    ] = useState([]);
+    ] =
+        useState(
+            []
+        );
 
 
     /* =====================================================
@@ -171,7 +210,10 @@ const GRNForm = ({
     const [
         activeTab,
         setActiveTab,
-    ] = useState("basic");
+    ] =
+        useState(
+            "basic"
+        );
 
 
     /* =====================================================
@@ -179,16 +221,21 @@ const GRNForm = ({
     ===================================================== */
 
     const normalizedMode =
-        String(mode || "CREATE")
+        String(
+            mode ||
+            "CREATE"
+        )
             .toUpperCase();
 
 
     const isEditMode =
-        normalizedMode === "EDIT";
+        normalizedMode ===
+        "EDIT";
 
 
     const isViewMode =
-        normalizedMode === "VIEW";
+        normalizedMode ===
+        "VIEW";
 
 
     const isReadOnly =
@@ -205,7 +252,9 @@ const GRNForm = ({
                 normalizeInitialValues(
                     initialValues
                 ),
-            [initialValues]
+            [
+                initialValues,
+            ]
         );
 
 
@@ -213,29 +262,51 @@ const GRNForm = ({
        SET INITIAL VALUES
     ===================================================== */
 
-    useEffect(() => {
+    useEffect(
+        () => {
 
-        form.setFieldsValue(
-            normalizedInitialValues
-        );
+            form.setFieldsValue(
+                normalizedInitialValues
+            );
 
-        setValidationErrors([]);
 
-        setActiveTab("basic");
+            setValidationErrors(
+                []
+            );
 
-    }, [
-        form,
-        normalizedInitialValues,
-    ]);
+
+            setActiveTab(
+                "basic"
+            );
+
+
+            actionRef.current =
+                "SAVE";
+
+
+            setSubmitAction(
+                "SAVE"
+            );
+
+        },
+        [
+            form,
+            normalizedInitialValues,
+        ]
+    );
 
 
     /* =====================================================
        FINISH
     ===================================================== */
 
-    const handleFinish = async (values) => {
+    const handleFinish = async (
+        values
+    ) => {
 
-        setValidationErrors([]);
+        setValidationErrors(
+            []
+        );
 
 
         /* -------------------------------------------------
@@ -243,19 +314,30 @@ const GRNForm = ({
         ------------------------------------------------- */
 
         const errors =
-            validateGRN(values);
+            validateGRN(
+                values
+            );
 
 
         if (
-            Array.isArray(errors) &&
+            Array.isArray(
+                errors
+            ) &&
             errors.length > 0
         ) {
 
-            setValidationErrors(errors);
+            setValidationErrors(
+                errors
+            );
 
-            setActiveTab("validation");
+
+            setActiveTab(
+                "validation"
+            );
+
 
             return;
+
         }
 
 
@@ -264,14 +346,18 @@ const GRNForm = ({
         ------------------------------------------------- */
 
         const payload =
-            prepareGRNPayload(values);
+            prepareGRNPayload(
+                values
+            );
 
 
         const finalPayload = {
+
             ...payload,
 
             action:
-                submitAction,
+                actionRef.current,
+
         };
 
 
@@ -280,7 +366,8 @@ const GRNForm = ({
         ------------------------------------------------- */
 
         if (
-            submitAction === "SAVE"
+            actionRef.current ===
+            "SAVE"
         ) {
 
             if (
@@ -292,8 +379,11 @@ const GRNForm = ({
                     finalPayload
                 );
 
-                return;
             }
+
+
+            return;
+
         }
 
 
@@ -309,25 +399,30 @@ const GRNForm = ({
             await onSubmit(
                 finalPayload
             );
+
         }
+
     };
 
 
     /* =====================================================
        FORM VALIDATION FAILURE
-    ===================================================== */
+       ===================================================== */
 
     const handleFinishFailed = (
         errorInfo
     ) => {
 
         const fields =
-            errorInfo?.errorFields || [];
+            errorInfo?.errorFields ||
+            [];
 
 
         const messages =
             fields.flatMap(
-                (field) =>
+                (
+                    field
+                ) =>
                     Array.isArray(
                         field.errors
                     )
@@ -341,58 +436,132 @@ const GRNForm = ({
         );
 
 
-        setActiveTab("basic");
+        setActiveTab(
+            "basic"
+        );
+
     };
 
-
     /* =====================================================
-       SAVE DRAFT
-    ===================================================== */
+   VALIDATION ERROR LOCATION
+   ===================================================== */
 
-    const handleSaveDraft = () => {
+    const getValidationErrorsForField = (
+        fieldPath
+    ) => {
 
-        if (isReadOnly) {
-            return;
+        if (
+            !Array.isArray(
+                validationErrors
+            )
+        ) {
+
+            return [];
+
         }
 
 
-        setSubmitAction("SAVE");
+        return validationErrors.filter(
+            error => {
 
-        /*
-         * Important:
-         * setState is async.
-         * form.submit() immediately after setState
-         * can still use old submitAction.
-         *
-         * Therefore action is controlled by
-         * the button handler below through a
-         * dedicated ref-style field.
-         */
+                if (
+                    !Array.isArray(
+                        error?.field
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    error.field.length !==
+                    fieldPath.length
+                ) {
+
+                    return false;
+
+                }
+
+
+                return error.field.every(
+                    (
+                        value,
+                        index
+                    ) =>
+                        String(value) ===
+                        String(
+                            fieldPath[index]
+                        )
+                );
+
+            }
+        );
+
+    };
+
+    /* =====================================================
+       SAVE DRAFT
+       ===================================================== */
+
+    const handleSaveDraft = () => {
+
+        if (
+            isReadOnly
+        ) {
+
+            return;
+
+        }
+
+
+        actionRef.current =
+            "SAVE";
+
+
+        setSubmitAction(
+            "SAVE"
+        );
+
 
         form.submit();
+
     };
 
 
     /* =====================================================
        SUBMIT
-    ===================================================== */
+       ===================================================== */
 
     const handleSubmit = () => {
 
-        if (isReadOnly) {
+        if (
+            isReadOnly
+        ) {
+
             return;
+
         }
 
 
-        setSubmitAction("SUBMIT");
+        actionRef.current =
+            "SUBMIT";
+
+
+        setSubmitAction(
+            "SUBMIT"
+        );
+
 
         form.submit();
+
     };
 
 
     /* =====================================================
        CANCEL
-    ===================================================== */
+       ===================================================== */
 
     const handleCancel = () => {
 
@@ -404,6 +573,7 @@ const GRNForm = ({
             onCancel();
 
             return;
+
         }
 
 
@@ -413,13 +583,15 @@ const GRNForm = ({
         ) {
 
             onClose();
+
         }
+
     };
 
 
     /* =====================================================
        TAB ITEMS
-    ===================================================== */
+       ===================================================== */
 
     const tabItems = [
 
@@ -428,14 +600,21 @@ const GRNForm = ({
         ================================================= */
 
         {
-            key: "basic",
 
-            label: "Basic & Supplier",
+            key:
+                "basic",
+
+            label:
+                "Basic & Supplier",
 
             children: (
-                <div className="grn-tab-content">
+
+                <div
+                    className="grn-tab-content"
+                >
 
                     <BasicSection
+
                         mode={
                             normalizedMode
                         }
@@ -443,10 +622,12 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
 
                     <SupplierSection
+
                         mode={
                             normalizedMode
                         }
@@ -454,10 +635,13 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
                 </div>
+
             ),
+
         },
 
 
@@ -466,12 +650,18 @@ const GRNForm = ({
         ================================================= */
 
         {
-            key: "items",
 
-            label: "Items & Batch",
+            key:
+                "items",
+
+            label:
+                "Items & Batch",
 
             children: (
-                <div className="grn-tab-content">
+
+                <div
+                    className="grn-tab-content"
+                >
 
                     <ItemsSection
                         mode={
@@ -481,10 +671,15 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
+                        validationErrors={
+                            validationErrors
+                        }
                     />
 
 
                     <BatchSection
+
                         mode={
                             normalizedMode
                         }
@@ -492,10 +687,13 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
                 </div>
+
             ),
+
         },
 
 
@@ -504,14 +702,21 @@ const GRNForm = ({
         ================================================= */
 
         {
-            key: "quality",
 
-            label: "Quality",
+            key:
+                "quality",
+
+            label:
+                "Quality",
 
             children: (
-                <div className="grn-tab-content">
+
+                <div
+                    className="grn-tab-content"
+                >
 
                     <QualitySection
+
                         mode={
                             normalizedMode
                         }
@@ -519,10 +724,13 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
                 </div>
+
             ),
+
         },
 
 
@@ -531,14 +739,21 @@ const GRNForm = ({
         ================================================= */
 
         {
-            key: "terms",
 
-            label: "Terms & Notes",
+            key:
+                "terms",
+
+            label:
+                "Terms & Notes",
 
             children: (
-                <div className="grn-tab-content">
+
+                <div
+                    className="grn-tab-content"
+                >
 
                     <TermsSection
+
                         mode={
                             normalizedMode
                         }
@@ -546,10 +761,12 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
 
                     <NotesSection
+
                         mode={
                             normalizedMode
                         }
@@ -557,10 +774,13 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
                     />
 
                 </div>
+
             ),
+
         },
 
 
@@ -569,12 +789,18 @@ const GRNForm = ({
         ================================================= */
 
         {
-            key: "validation",
 
-            label: "Validation & Audit",
+            key:
+                "validation",
+
+            label:
+                "Validation & Audit",
 
             children: (
-                <div className="grn-tab-content">
+
+                <div
+                    className="grn-tab-content"
+                >
 
                     <ValidationSection
                         mode={
@@ -584,10 +810,15 @@ const GRNForm = ({
                         disabled={
                             isReadOnly
                         }
+
+                        validationErrors={
+                            validationErrors
+                        }
                     />
 
 
                     <AuditSection
+
                         mode={
                             normalizedMode
                         }
@@ -599,10 +830,13 @@ const GRNForm = ({
                         auditTrail={
                             auditTrail
                         }
+
                     />
 
                 </div>
+
             ),
+
         },
 
     ];
@@ -610,7 +844,7 @@ const GRNForm = ({
 
     /* =====================================================
        RENDER
-    ===================================================== */
+       ===================================================== */
 
     return (
 
@@ -648,6 +882,85 @@ const GRNForm = ({
                     className="grn-form-body"
                 >
 
+                    {
+                        validationErrors.length >
+                        0 && (
+
+                            <Alert
+
+                                type="error"
+
+                                showIcon
+
+                                closable
+
+                                onClose={() =>
+                                    setValidationErrors(
+                                        []
+                                    )
+                                }
+
+                                message={
+                                    "Please correct the following errors."
+                                }
+
+                                description={
+
+                                    <ul
+                                        style={{
+                                            margin:
+                                                "6px 0 0 18px",
+
+                                            padding:
+                                                0,
+
+                                            maxHeight:
+                                                180,
+
+                                            overflowY:
+                                                "auto",
+                                        }}
+                                    >
+
+                                        {
+                                            validationErrors.map(
+                                                (
+                                                    error,
+                                                    index
+                                                ) => (
+
+                                                    <li
+                                                        key={
+                                                            `${error?.index ?? "general"}-${index}`
+                                                        }
+                                                    >
+
+                                                        {
+                                                            error?.message ||
+                                                            error
+                                                        }
+
+                                                    </li>
+
+                                                )
+                                            )
+                                        }
+
+                                    </ul>
+
+                                }
+
+                                style={{
+                                    marginBottom:
+                                        12,
+                                }}
+
+                            />
+
+                        )
+                    }
+
+
                     <Tabs
 
                         activeKey={
@@ -676,8 +989,8 @@ const GRNForm = ({
 
 
             {/* =================================================
-            ONLY ONE FOOTER
-        ================================================= */}
+                ONLY ONE FOOTER
+            ================================================= */}
 
             <div
                 className="grn-drawer-footer"
@@ -688,6 +1001,7 @@ const GRNForm = ({
                 >
 
                     <Button
+
                         icon={
                             <CloseOutlined />
                         }
@@ -699,6 +1013,7 @@ const GRNForm = ({
                         disabled={
                             loading
                         }
+
                     >
                         Cancel
                     </Button>
@@ -710,6 +1025,7 @@ const GRNForm = ({
                             <>
 
                                 <Button
+
                                     icon={
                                         <SaveOutlined />
                                     }
@@ -723,12 +1039,14 @@ const GRNForm = ({
                                     onClick={
                                         handleSaveDraft
                                     }
+
                                 >
                                     Save Draft
                                 </Button>
 
 
                                 <Button
+
                                     type="primary"
 
                                     icon={
@@ -750,12 +1068,14 @@ const GRNForm = ({
                                     onClick={
                                         handleSubmit
                                     }
+
                                 >
                                     {
                                         isEditMode
                                             ? "Update & Submit"
                                             : "Submit for Approval"
                                     }
+
                                 </Button>
 
                             </>
@@ -770,6 +1090,7 @@ const GRNForm = ({
         </div>
 
     );
+
 };
 
 

@@ -6,6 +6,7 @@ import React, {
 } from "react";
 
 import {
+    Alert,
     Button,
     Card,
     Col,
@@ -61,6 +62,307 @@ const numberValue = (
 
 };
 
+
+
+/* =========================================================
+   GET ITEM VALIDATION ERROR
+   ========================================================= */
+
+const getItemValidationError = (
+    errors,
+    index,
+    fieldName
+) => {
+
+    if (
+        !Array.isArray(errors)
+    ) {
+
+        return "";
+
+    }
+
+
+    const itemErrors =
+        errors.filter(
+            error => {
+
+                if (
+                    !error ||
+                    typeof error !==
+                    "object"
+                ) {
+
+                    return false;
+
+                }
+
+
+                const field =
+                    Array.isArray(
+                        error?.field
+                    )
+                        ? error.field
+                        : [];
+
+
+                /* -----------------------------------------
+                   ITEM INDEX MUST MATCH
+                ----------------------------------------- */
+
+                if (
+                    field[0] !== "items" ||
+                    Number(field[1]) !== index
+                ) {
+
+                    return false;
+
+                }
+
+
+                /* -----------------------------------------
+                   EXACT FIELD MATCH
+                ----------------------------------------- */
+
+                if (
+                    fieldName &&
+                    field.length >= 3
+                ) {
+
+                    return (
+                        field[2] ===
+                        fieldName
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   ITEM LEVEL ERROR
+                   ["items", index]
+                ----------------------------------------- */
+
+                if (
+                    fieldName &&
+                    field.length === 2
+                ) {
+
+                    const message =
+                        String(
+                            error?.message ||
+                            ""
+                        ).toLowerCase();
+
+
+                    const normalizedFieldName =
+                        String(
+                            fieldName
+                        )
+                            .replace(
+                                /([A-Z])/g,
+                                " $1"
+                            )
+                            .toLowerCase()
+                            .trim();
+
+
+                    return message.includes(
+                        normalizedFieldName
+                    );
+
+                }
+
+
+                return true;
+
+            }
+        );
+
+
+    const firstError =
+        itemErrors[0];
+
+
+    if (
+        typeof firstError ===
+        "string"
+    ) {
+
+        return firstError;
+
+    }
+
+
+    return String(
+        firstError?.message ||
+        ""
+    );
+
+};
+
+/* =========================================================
+   GET ALL ITEM VALIDATION ERRORS
+   ========================================================= */
+
+const getAllItemValidationErrors = (
+    errors,
+    index,
+    record
+) => {
+
+    if (
+        !Array.isArray(errors)
+    ) {
+
+        return [];
+
+    }
+
+
+    const matchedErrors =
+        errors.filter(
+            error => {
+
+                if (
+                    !error ||
+                    typeof error !==
+                    "object"
+                ) {
+
+                    return false;
+
+                }
+
+
+                /* -----------------------------------------
+                   INDEX MATCH
+                ----------------------------------------- */
+
+                if (
+                    Number.isInteger(
+                        error?.index
+                    ) &&
+                    error.index ===
+                    index
+                ) {
+
+                    return true;
+
+                }
+
+
+                /* -----------------------------------------
+                   ITEM ID MATCH
+                ----------------------------------------- */
+
+                if (
+                    error?.itemId &&
+                    record?.id &&
+                    String(
+                        error.itemId
+                    ) ===
+                    String(
+                        record.id
+                    )
+                ) {
+
+                    return true;
+
+                }
+
+
+                /* -----------------------------------------
+                   FIELD PATH MATCH
+                   ["items", index]
+                ----------------------------------------- */
+
+                const field =
+                    Array.isArray(
+                        error?.field
+                    )
+                        ? error.field
+                        : [];
+
+
+                return (
+                    field[0] === "items" &&
+                    Number(
+                        field[1]
+                    ) === index
+                );
+
+            }
+        );
+
+
+    /* ---------------------------------------------
+       REMOVE DUPLICATE MESSAGES
+    --------------------------------------------- */
+
+    const uniqueErrors = [];
+
+    const seenMessages =
+        new Set();
+
+
+    matchedErrors.forEach(
+        error => {
+
+            const message =
+                String(
+                    error?.message ||
+                    ""
+                ).trim();
+
+
+            if (
+                !message
+            ) {
+
+                return;
+
+            }
+
+
+            const normalizedMessage =
+                message.toLowerCase();
+
+
+            if (
+                seenMessages.has(
+                    normalizedMessage
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            seenMessages.add(
+                normalizedMessage
+            );
+
+
+            uniqueErrors.push({
+
+                ...error,
+
+                message,
+
+            });
+
+        }
+    );
+
+
+    return uniqueErrors;
+
+};
+
+/* =========================================================
+   LINE CALCULATION
+   ========================================================= */
 
 const calculateLineValues = (
     item = {}
@@ -166,6 +468,7 @@ const calculateLineValues = (
    ========================================================= */
 
 const ItemsSection = ({
+
     mode = "CREATE",
 
     disabled = false,
@@ -173,6 +476,8 @@ const ItemsSection = ({
     purchaseOrderItems = [],
 
     onItemsChange,
+
+    validationErrors = [],
 
 }) => {
 
@@ -212,6 +517,158 @@ const ItemsSection = ({
 
 
     /* =====================================================
+       NORMALIZE VALIDATION ERRORS
+    ===================================================== */
+
+    const normalizedValidationErrors =
+        useMemo(
+            () => {
+
+                if (
+                    !Array.isArray(
+                        validationErrors
+                    )
+                ) {
+
+                    return [];
+
+                }
+
+
+                return validationErrors
+                    .map(
+                        (
+                            error
+                        ) => {
+
+                            if (
+                                typeof error ===
+                                "string"
+                            ) {
+
+                                return {
+
+                                    index:
+                                        -1,
+
+                                    message:
+                                        error,
+
+                                };
+
+                            }
+
+
+                            return {
+
+                                index:
+                                    Number.isInteger(
+                                        error?.index
+                                    )
+                                        ? error.index
+                                        : -1,
+
+                                message:
+                                    error?.message ||
+                                    "",
+
+                                field:
+                                    error?.field,
+
+                                itemId:
+                                    error?.itemId,
+
+                            };
+
+                        }
+                    )
+                    .filter(
+                        error =>
+                            Boolean(
+                                error.message
+                            )
+                    );
+
+            },
+            [
+                validationErrors,
+            ]
+        );
+
+
+    /* =====================================================
+       GET ITEM ERRORS
+    ===================================================== */
+
+    const getItemValidationErrors = (
+        index,
+        record
+    ) => {
+
+        return normalizedValidationErrors.filter(
+            (
+                error
+            ) => {
+
+                if (
+                    error.index ===
+                    index
+                ) {
+
+                    return true;
+
+                }
+
+
+                if (
+                    error.itemId &&
+                    record?.id &&
+                    String(
+                        error.itemId
+                    ) ===
+                    String(
+                        record.id
+                    )
+                ) {
+
+                    return true;
+
+                }
+
+
+                return false;
+
+            }
+        );
+
+    };
+
+
+
+    /* =====================================================
+   FIELD-SPECIFIC ITEM ERROR
+   ===================================================== */
+
+    /* =====================================================
+   FIELD-SPECIFIC ITEM ERROR
+   ===================================================== */
+
+    const hasItemFieldError = (
+        index,
+        fieldName
+    ) => {
+
+        return Boolean(
+            getItemValidationError(
+                validationErrors,
+                index,
+                fieldName
+            )
+        );
+
+    };
+
+    /* =====================================================
        INITIALIZE ITEMS FROM PO
     ===================================================== */
 
@@ -219,7 +676,8 @@ const ItemsSection = ({
         () => {
 
             if (
-                availablePOItems.length === 0
+                availablePOItems.length ===
+                0
             ) {
 
                 return;
@@ -591,7 +1049,7 @@ const ItemsSection = ({
 
         const current =
             currentItems[
-                index
+            index
             ] || {};
 
 
@@ -659,6 +1117,10 @@ const ItemsSection = ({
         useMemo(
             () => [
 
+                /* -----------------------------------------
+                   INDEX
+                ----------------------------------------- */
+
                 {
                     title:
                         "#",
@@ -677,11 +1139,54 @@ const ItemsSection = ({
                             _,
                             __,
                             index
-                        ) =>
-                            index + 1,
+                        ) => {
+
+                            const errors =
+                                getItemValidationErrors(
+                                    index,
+                                    items[index]
+                                );
+
+
+                            return (
+
+                                <Space
+                                    direction="vertical"
+                                    size={2}
+                                >
+
+                                    <Text>
+                                        {
+                                            index + 1
+                                        }
+                                    </Text>
+
+
+                                    {
+                                        errors.length >
+                                        0 && (
+
+                                            <Tag
+                                                color="error"
+                                            >
+                                                Error
+                                            </Tag>
+
+                                        )
+                                    }
+
+                                </Space>
+
+                            );
+
+                        },
 
                 },
 
+
+                /* -----------------------------------------
+                   ITEM
+                ----------------------------------------- */
 
                 {
                     title:
@@ -699,38 +1204,161 @@ const ItemsSection = ({
                     render:
                         (
                             _,
-                            record
-                        ) => (
+                            record,
+                            index
+                        ) => {
 
-                            <div>
+                            const itemErrors =
+                                getAllItemValidationErrors(
+                                    validationErrors,
+                                    index,
+                                    record
+                                );
 
-                                <Text
-                                    strong
-                                >
+
+                            return (
+
+                                <div>
+
+                                    <Text
+                                        strong
+                                    >
+                                        {
+                                            record?.itemName ||
+                                            record?.drugName ||
+                                            "-"
+                                        }
+                                    </Text>
+
+
+                                    <br />
+
+
+                                    <Text
+                                        type="secondary"
+                                    >
+                                        {
+                                            record?.itemCode ||
+                                            "-"
+                                        }
+                                    </Text>
+
+
+                                    {/* =====================================
+                        ITEM VALIDATION SUMMARY
+                    ===================================== */}
+
                                     {
-                                        record?.itemName ||
-                                        record?.drugName ||
-                                        "-"
+                                        itemErrors.length >
+                                        0 && (
+
+                                            <div
+                                                style={{
+                                                    marginTop:
+                                                        6,
+
+                                                    padding:
+                                                        "6px 8px",
+
+                                                    borderRadius:
+                                                        4,
+
+                                                    background:
+                                                        "#fff2f0",
+
+                                                    border:
+                                                        "1px solid #ffccc7",
+                                                }}
+                                            >
+
+                                                <div
+                                                    style={{
+                                                        fontSize:
+                                                            12,
+
+                                                        fontWeight:
+                                                            600,
+
+                                                        color:
+                                                            "#cf1322",
+
+                                                        marginBottom:
+                                                            4,
+                                                    }}
+                                                >
+                                                    Validation Errors
+                                                </div>
+
+
+                                                {
+                                                    itemErrors.map(
+                                                        (
+                                                            error,
+                                                            errorIndex
+                                                        ) => (
+
+                                                            <div
+
+                                                                key={
+                                                                    `item-validation-${index}-${errorIndex}`
+                                                                }
+
+                                                                style={{
+                                                                    display:
+                                                                        "flex",
+
+                                                                    alignItems:
+                                                                        "flex-start",
+
+                                                                    gap:
+                                                                        5,
+
+                                                                    fontSize:
+                                                                        12,
+
+                                                                    lineHeight:
+                                                                        "18px",
+
+                                                                    color:
+                                                                        "#cf1322",
+                                                                }}
+
+                                                            >
+
+                                                                <span>
+                                                                    •
+                                                                </span>
+
+
+                                                                <span>
+                                                                    {
+                                                                        error.message
+                                                                    }
+                                                                </span>
+
+                                                            </div>
+
+                                                        )
+                                                    )
+                                                }
+
+                                            </div>
+
+                                        )
                                     }
-                                </Text>
 
-                                <br />
+                                </div>
 
-                                <Text
-                                    type="secondary"
-                                >
-                                    {
-                                        record?.itemCode ||
-                                        "-"
-                                    }
-                                </Text>
+                            );
 
-                            </div>
-
-                        ),
+                        },
 
                 },
 
+
+                /* -----------------------------------------
+                   ORDERED
+                ----------------------------------------- */
 
                 {
                     title:
@@ -756,6 +1384,10 @@ const ItemsSection = ({
 
                 },
 
+
+                /* -----------------------------------------
+                   PENDING
+                ----------------------------------------- */
 
                 {
                     title:
@@ -797,6 +1429,10 @@ const ItemsSection = ({
                 },
 
 
+                /* -----------------------------------------
+                   RECEIVED
+                ----------------------------------------- */
+
                 {
                     title:
                         "Received",
@@ -812,74 +1448,146 @@ const ItemsSection = ({
                             _,
                             record,
                             index
-                        ) => (
+                        ) => {
 
-                            <InputNumber
+                            const receivedQuantityError =
+                                getItemValidationError(
+                                    validationErrors,
+                                    index,
+                                    "receivedQuantity"
+                                );
 
-                                min={0}
 
-                                max={
-                                    numberValue(
-                                        record?.pendingQuantity
-                                    )
-                                }
+                            /*
+                             * validateGRNItems() currently creates
+                             * item-level errors with:
+                             *
+                             * ["items", index]
+                             *
+                             * Therefore, if no exact field-level
+                             * match exists, also check the row error.
+                             */
 
-                                value={
-                                    numberValue(
-                                        record?.receivedQuantity
-                                    )
-                                }
+                            const rowValidationError =
+                                receivedQuantityError;
 
-                                disabled={
-                                    disabled
-                                }
 
-                                style={{
-                                    width:
-                                        "100%",
-                                }}
+                            return (
 
-                                onChange={
-                                    value => {
+                                <div
+                                    style={{
+                                        width:
+                                            "100%",
+                                    }}
+                                >
 
-                                        const received =
+                                    <InputNumber
+
+                                        min={0}
+
+                                        max={
                                             numberValue(
-                                                value
-                                            );
+                                                record?.pendingQuantity
+                                            )
+                                        }
 
-                                        const rejected =
+                                        value={
                                             numberValue(
-                                                record?.rejectedQuantity
-                                            );
+                                                record?.receivedQuantity
+                                            )
+                                        }
 
-                                        const accepted =
-                                            Math.max(
-                                                0,
-                                                received -
-                                                rejected
-                                            );
+                                        disabled={
+                                            disabled
+                                        }
+
+                                        status={
+                                            rowValidationError
+                                                ? "error"
+                                                : undefined
+                                        }
+
+                                        style={{
+                                            width:
+                                                "100%",
+                                        }}
+
+                                        onChange={
+                                            value => {
+
+                                                const received =
+                                                    numberValue(
+                                                        value
+                                                    );
+
+                                                const rejected =
+                                                    numberValue(
+                                                        record?.rejectedQuantity
+                                                    );
+
+                                                const accepted =
+                                                    Math.max(
+                                                        0,
+                                                        received -
+                                                        rejected
+                                                    );
 
 
-                                        updateItem(
-                                            index,
-                                            {
-                                                receivedQuantity:
-                                                    received,
+                                                updateItem(
+                                                    index,
+                                                    {
+                                                        receivedQuantity:
+                                                            received,
 
-                                                acceptedQuantity:
-                                                    accepted,
+                                                        acceptedQuantity:
+                                                            accepted,
+                                                    }
+                                                );
+
                                             }
-                                        );
+                                        }
 
+                                    />
+
+
+                                    {
+                                        rowValidationError && (
+
+                                            <div
+                                                style={{
+                                                    color:
+                                                        "#ff4d4f",
+
+                                                    fontSize:
+                                                        12,
+
+                                                    lineHeight:
+                                                        "18px",
+
+                                                    marginTop:
+                                                        4,
+                                                }}
+                                            >
+                                                {
+                                                    rowValidationError
+                                                }
+                                            </div>
+
+                                        )
                                     }
-                                }
 
-                            />
+                                </div>
 
-                        ),
+                            );
+
+                        },
 
                 },
 
+
+                /* -----------------------------------------
+                   FREE
+                ----------------------------------------- */
 
                 {
                     title:
@@ -937,6 +1645,10 @@ const ItemsSection = ({
                 },
 
 
+                /* -----------------------------------------
+                   ACCEPTED
+                ----------------------------------------- */
+
                 {
                     title:
                         "Accepted",
@@ -950,23 +1662,83 @@ const ItemsSection = ({
                     render:
                         (
                             _,
-                            record
-                        ) => (
+                            record,
+                            index
+                        ) => {
 
-                            <Tag
-                                color="green"
-                            >
-                                {
-                                    numberValue(
-                                        record?.acceptedQuantity
-                                    )
-                                }
-                            </Tag>
+                            const acceptedQuantityError =
+                                getItemValidationError(
+                                    validationErrors,
+                                    index,
+                                    "acceptedQuantity"
+                                );
 
-                        ),
+
+                            const rowValidationError =
+                                acceptedQuantityError;
+
+                            return (
+
+                                <div
+                                    style={{
+                                        width:
+                                            "100%",
+                                    }}
+                                >
+
+                                    <Tag
+                                        color={
+                                            rowValidationError
+                                                ? "error"
+                                                : "green"
+                                        }
+                                    >
+                                        {
+                                            numberValue(
+                                                record?.acceptedQuantity
+                                            )
+                                        }
+                                    </Tag>
+
+
+                                    {
+                                        acceptedQuantityError && (
+
+                                            <div
+                                                style={{
+                                                    color:
+                                                        "#ff4d4f",
+
+                                                    fontSize:
+                                                        12,
+
+                                                    lineHeight:
+                                                        "18px",
+
+                                                    marginTop:
+                                                        4,
+                                                }}
+                                            >
+                                                {
+                                                    acceptedQuantityError
+                                                }
+                                            </div>
+
+                                        )
+                                    }
+
+                                </div>
+
+                            );
+
+                        },
 
                 },
 
+
+                /* -----------------------------------------
+                   REJECTED
+                ----------------------------------------- */
 
                 {
                     title:
@@ -983,74 +1755,140 @@ const ItemsSection = ({
                             _,
                             record,
                             index
-                        ) => (
+                        ) => {
 
-                            <InputNumber
+                            const rejectedQuantityError =
+                                getItemValidationError(
+                                    validationErrors,
+                                    index,
+                                    "rejectedQuantity"
+                                );
 
-                                min={0}
 
-                                max={
-                                    numberValue(
-                                        record?.receivedQuantity
-                                    )
-                                }
+                            const rowValidationError =
+                                rejectedQuantityError;
 
-                                value={
-                                    numberValue(
-                                        record?.rejectedQuantity
-                                    )
-                                }
 
-                                disabled={
-                                    disabled
-                                }
+                            return (
 
-                                style={{
-                                    width:
-                                        "100%",
-                                }}
+                                <div
+                                    style={{
+                                        width:
+                                            "100%",
+                                    }}
+                                >
 
-                                onChange={
-                                    value => {
+                                    <InputNumber
 
-                                        const rejected =
-                                            numberValue(
-                                                value
-                                            );
+                                        min={0}
 
-                                        const received =
+                                        max={
                                             numberValue(
                                                 record?.receivedQuantity
-                                            );
+                                            )
+                                        }
 
-                                        const accepted =
-                                            Math.max(
-                                                0,
-                                                received -
-                                                rejected
-                                            );
+                                        value={
+                                            numberValue(
+                                                record?.rejectedQuantity
+                                            )
+                                        }
+
+                                        disabled={
+                                            disabled
+                                        }
+
+                                        status={
+                                            rowValidationError
+                                                ? "error"
+                                                : undefined
+                                        }
+
+                                        style={{
+                                            width:
+                                                "100%",
+                                        }}
+
+                                        onChange={
+                                            value => {
+
+                                                const rejected =
+                                                    numberValue(
+                                                        value
+                                                    );
 
 
-                                        updateItem(
-                                            index,
-                                            {
-                                                rejectedQuantity:
-                                                    rejected,
+                                                const received =
+                                                    numberValue(
+                                                        record?.receivedQuantity
+                                                    );
 
-                                                acceptedQuantity:
-                                                    accepted,
+
+                                                const accepted =
+                                                    Math.max(
+                                                        0,
+                                                        received -
+                                                        rejected
+                                                    );
+
+
+                                                updateItem(
+                                                    index,
+                                                    {
+                                                        rejectedQuantity:
+                                                            rejected,
+
+                                                        acceptedQuantity:
+                                                            accepted,
+                                                    }
+                                                );
+
                                             }
-                                        );
+                                        }
 
+                                    />
+
+
+                                    {
+                                        rowValidationError && (
+
+                                            <div
+                                                style={{
+                                                    color:
+                                                        "#ff4d4f",
+
+                                                    fontSize:
+                                                        12,
+
+                                                    lineHeight:
+                                                        "18px",
+
+                                                    marginTop:
+                                                        4,
+                                                }}
+                                            >
+                                                {
+                                                    rowValidationError
+                                                }
+                                            </div>
+
+                                        )
                                     }
-                                }
 
-                            />
+                                </div>
 
-                        ),
+                            );
+
+                        },
 
                 },
 
+
+
+
+                /* -----------------------------------------
+                   BATCH
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1067,40 +1905,98 @@ const ItemsSection = ({
                             _,
                             record,
                             index
-                        ) => (
+                        ) => {
 
-                            <Input
+                            const batchNumberError =
+                                getItemValidationError(
+                                    validationErrors,
+                                    index,
+                                    "batchNumber"
+                                );
 
-                                value={
-                                    record?.batchNumber ||
-                                    ""
-                                }
 
-                                placeholder="Batch no."
+                            return (
 
-                                disabled={
-                                    disabled
-                                }
+                                <div
+                                    style={{
+                                        width:
+                                            "100%",
+                                    }}
+                                >
 
-                                onChange={
-                                    event =>
-                                        updateItem(
-                                            index,
-                                            {
-                                                batchNumber:
-                                                    event
-                                                        .target
-                                                        .value,
-                                            }
+                                    <Input
+
+                                        value={
+                                            record?.batchNumber ||
+                                            ""
+                                        }
+
+                                        placeholder="Batch no."
+
+                                        disabled={
+                                            disabled
+                                        }
+
+                                        status={
+                                            batchNumberError
+                                                ? "error"
+                                                : undefined
+                                        }
+
+                                        onChange={
+                                            event =>
+                                                updateItem(
+                                                    index,
+                                                    {
+                                                        batchNumber:
+                                                            event
+                                                                .target
+                                                                .value,
+                                                    }
+                                                )
+                                        }
+
+                                    />
+
+
+                                    {
+                                        batchNumberError && (
+
+                                            <div
+                                                style={{
+                                                    color:
+                                                        "#ff4d4f",
+
+                                                    fontSize:
+                                                        12,
+
+                                                    lineHeight:
+                                                        "18px",
+
+                                                    marginTop:
+                                                        4,
+                                                }}
+                                            >
+                                                {
+                                                    batchNumberError
+                                                }
+                                            </div>
+
                                         )
-                                }
+                                    }
 
-                            />
+                                </div>
 
-                        ),
+                            );
+
+                        },
 
                 },
 
+
+                /* -----------------------------------------
+                   EXPIRY
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1117,47 +2013,104 @@ const ItemsSection = ({
                             _,
                             record,
                             index
-                        ) => (
+                        ) => {
 
-                            <DatePicker
+                            const expiryDateError =
+                                getItemValidationError(
+                                    validationErrors,
+                                    index,
+                                    "expiryDate"
+                                );
 
-                                value={
-                                    record?.expiryDate ||
-                                    null
-                                }
 
-                                format="MM/YYYY"
+                            return (
 
-                                picker="month"
+                                <div
+                                    style={{
+                                        width:
+                                            "100%",
+                                    }}
+                                >
 
-                                placeholder="Expiry"
+                                    <DatePicker
 
-                                disabled={
-                                    disabled
-                                }
+                                        value={
+                                            record?.expiryDate ||
+                                            null
+                                        }
 
-                                style={{
-                                    width:
-                                        "100%",
-                                }}
+                                        format="MM/YYYY"
 
-                                onChange={
-                                    value =>
-                                        updateItem(
-                                            index,
-                                            {
-                                                expiryDate:
-                                                    value,
-                                            }
+                                        picker="month"
+
+                                        placeholder="Expiry"
+
+                                        disabled={
+                                            disabled
+                                        }
+
+                                        status={
+                                            expiryDateError
+                                                ? "error"
+                                                : undefined
+                                        }
+
+                                        style={{
+                                            width:
+                                                "100%",
+                                        }}
+
+                                        onChange={
+                                            value =>
+                                                updateItem(
+                                                    index,
+                                                    {
+                                                        expiryDate:
+                                                            value,
+                                                    }
+                                                )
+                                        }
+
+                                    />
+
+
+                                    {
+                                        expiryDateError && (
+
+                                            <div
+                                                style={{
+                                                    color:
+                                                        "#ff4d4f",
+
+                                                    fontSize:
+                                                        12,
+
+                                                    lineHeight:
+                                                        "18px",
+
+                                                    marginTop:
+                                                        4,
+                                                }}
+                                            >
+                                                {
+                                                    expiryDateError
+                                                }
+                                            </div>
+
                                         )
-                                }
+                                    }
 
-                            />
+                                </div>
 
-                        ),
+                            );
+
+                        },
 
                 },
 
+                /* -----------------------------------------
+                   RATE
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1220,6 +2173,10 @@ const ItemsSection = ({
                 },
 
 
+                /* -----------------------------------------
+                   TAX
+                ----------------------------------------- */
+
                 {
                     title:
                         "Tax %",
@@ -1280,6 +2237,10 @@ const ItemsSection = ({
                 },
 
 
+                /* -----------------------------------------
+                   LINE TOTAL
+                ----------------------------------------- */
+
                 {
                     title:
                         "Line Total",
@@ -1311,6 +2272,7 @@ const ItemsSection = ({
                                         {
                                             minimumFractionDigits:
                                                 2,
+
                                             maximumFractionDigits:
                                                 2,
                                         }
@@ -1322,6 +2284,10 @@ const ItemsSection = ({
 
                 },
 
+
+                /* -----------------------------------------
+                   ACTION
+                ----------------------------------------- */
 
                 {
                     title:
@@ -1373,6 +2339,7 @@ const ItemsSection = ({
             [
                 disabled,
                 items,
+                normalizedValidationErrors,
             ]
         );
 
@@ -1421,6 +2388,7 @@ const ItemsSection = ({
 
                     },
                     {
+
                         totalItems:
                             0,
 
@@ -1435,6 +2403,7 @@ const ItemsSection = ({
 
                         totalAmount:
                             0,
+
                     }
                 );
 
@@ -1480,13 +2449,17 @@ const ItemsSection = ({
                 !disabled && (
 
                     <Button
+
                         type="primary"
+
                         icon={
                             <PlusOutlined />
                         }
+
                         onClick={
                             handleAddItem
                         }
+
                     >
                         Add Item
                     </Button>
@@ -1502,11 +2475,109 @@ const ItemsSection = ({
 
         >
 
+            {/* =================================================
+                VALIDATION SUMMARY
+            ================================================= */}
+
+            {
+                normalizedValidationErrors.length >
+                0 && (
+
+                    <Alert
+
+                        type="error"
+
+                        showIcon
+
+                        message={
+                            `Item validation errors (${normalizedValidationErrors.length})`
+                        }
+
+                        description={
+
+                            <div>
+
+                                {
+                                    normalizedValidationErrors.map(
+                                        (
+                                            error,
+                                            index
+                                        ) => {
+
+                                            const itemIndex =
+                                                Number.isInteger(
+                                                    error?.index
+                                                ) &&
+                                                    error.index >=
+                                                    0
+                                                    ? error.index
+                                                    : null;
+
+
+                                            return (
+
+                                                <div
+                                                    key={
+                                                        `items-validation-${index}`
+                                                    }
+
+                                                    style={{
+                                                        marginBottom:
+                                                            5,
+                                                    }}
+                                                >
+
+                                                    {
+                                                        itemIndex !==
+                                                        null && (
+
+                                                            <strong>
+                                                                {
+                                                                    `Item ${itemIndex + 1}: `
+                                                                }
+                                                            </strong>
+
+                                                        )
+                                                    }
+
+
+                                                    {
+                                                        error.message
+                                                    }
+
+                                                </div>
+
+                                            );
+
+                                        }
+                                    )
+                                }
+
+                            </div>
+
+                        }
+
+                        style={{
+                            marginBottom:
+                                16,
+                        }}
+
+                    />
+
+                )
+            }
+
+
+            {/* =================================================
+                ITEMS TABLE
+            ================================================= */}
+
             <Table
 
-                rowKey={record =>
-                    record?.id ||
-                    record?.purchaseOrderItemId
+                rowKey={
+                    record =>
+                        record?.id ||
+                        record?.purchaseOrderItemId
                 }
 
                 columns={
@@ -1526,6 +2597,25 @@ const ItemsSection = ({
                         1900,
                 }}
 
+                rowClassName={(
+                    record,
+                    index
+                ) => {
+
+                    const errors =
+                        getItemValidationErrors(
+                            index,
+                            record
+                        );
+
+
+                    return errors.length >
+                        0
+                        ? "grn-item-row-error"
+                        : "";
+
+                }}
+
                 locale={{
                     emptyText:
                         "No items added to this GRN.",
@@ -1536,6 +2626,10 @@ const ItemsSection = ({
 
             <Divider />
 
+
+            {/* =================================================
+                SUMMARY
+            ================================================= */}
 
             <Row
                 gutter={[
@@ -1660,7 +2754,7 @@ const ItemsSection = ({
                             strong
                             type={
                                 summary.rejectedQuantity >
-                                0
+                                    0
                                     ? "danger"
                                     : undefined
                             }
@@ -1703,6 +2797,7 @@ const ItemsSection = ({
                                     {
                                         minimumFractionDigits:
                                             2,
+
                                         maximumFractionDigits:
                                             2,
                                     }

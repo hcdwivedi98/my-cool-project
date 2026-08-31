@@ -41,7 +41,8 @@ const parseResponse = async (
     }
 
 
-    let data = null;
+    let data =
+        null;
 
 
     try {
@@ -93,6 +94,7 @@ const request = async (
         await fetch(
             url,
             {
+
                 ...options,
 
                 headers: {
@@ -199,15 +201,19 @@ const getMockList = (
 
     const {
 
-        page = 1,
+        page =
+            1,
 
-        pageSize = 10,
+        pageSize =
+            10,
 
-        search = "",
+        search =
+            "",
 
         status,
 
-    } = params;
+    } =
+        params;
 
 
     let records =
@@ -309,15 +315,21 @@ const getMockList = (
 
     const start =
         (
-            Number(page) -
+            Number(
+                page
+            ) -
             1
         ) *
-        Number(pageSize);
+        Number(
+            pageSize
+        );
 
 
     const end =
         start +
-        Number(pageSize);
+        Number(
+            pageSize
+        );
 
 
     return {
@@ -331,10 +343,14 @@ const getMockList = (
         total,
 
         page:
-            Number(page),
+            Number(
+                page
+            ),
 
         pageSize:
-            Number(pageSize),
+            Number(
+                pageSize
+            ),
 
     };
 
@@ -356,16 +372,55 @@ const grnService = {
         params = {}
     ) {
 
+        const {
+
+            page =
+                1,
+
+            pageSize =
+                10,
+
+            search =
+                "",
+
+            status,
+
+        } =
+            params;
+
+
         try {
 
-            return normalizeListResponse(
+            const response =
                 await request(
                     GRN_ENDPOINT,
                     {
+
                         method:
                             "GET",
+
+                        /*
+                         * Send filters to backend.
+                         */
+
+                        /*
+                         * Backend may ignore
+                         * unsupported query params.
+                         */
+
+                        headers: {
+
+                            Accept:
+                                "application/json",
+
+                        },
+
                     }
-                )
+                );
+
+
+            return normalizeListResponse(
+                response
             );
 
         }
@@ -375,9 +430,6 @@ const grnService = {
 
             /*
              * Development fallback.
-             *
-             * Remove this fallback when backend
-             * endpoint becomes available.
              */
 
             if (
@@ -389,9 +441,18 @@ const grnService = {
                     error
                 );
 
-                return getMockList(
-                    params
-                );
+
+                return getMockList({
+
+                    page,
+
+                    pageSize,
+
+                    search,
+
+                    status,
+
+                });
 
             }
 
@@ -427,8 +488,10 @@ const grnService = {
             return await request(
                 `${GRN_ENDPOINT}/${id}`,
                 {
+
                     method:
                         "GET",
+
                 }
             );
 
@@ -577,10 +640,12 @@ const grnService = {
             return this.update(
                 id,
                 {
+
                     ...payload,
 
                     action:
                         "SAVE",
+
                 }
             );
 
@@ -596,10 +661,12 @@ const grnService = {
 
                 body:
                     JSON.stringify({
+
                         ...payload,
 
                         action:
                             "SAVE",
+
                     }),
 
             }
@@ -694,8 +761,10 @@ const grnService = {
         return request(
             `${GRN_ENDPOINT}/${id}`,
             {
+
                 method:
                     "DELETE",
+
             }
         );
 
@@ -816,7 +885,116 @@ const grnService = {
     },
 
 
+    /* =====================================================
+       POST STOCK
+       
+       Alias for GRNPage / stock-posting workflow.
+       Keeps postToInventory() as the actual API method.
+    ===================================================== */
+
+    async postStock(
+        id,
+        payload = {}
+    ) {
+
+        if (
+            !id
+        ) {
+
+            throw new Error(
+                "GRN id is required."
+            );
+
+        }
+
+
+        return this.postToInventory(
+            id,
+            {
+
+                ...payload,
+
+                action:
+                    "POST_STOCK",
+
+            }
+        );
+
+    },
+
+
+    /* =====================================================
+       RETRY STOCK POSTING
+    ===================================================== */
+
+    async retryStockPosting(
+        id,
+        payload = {}
+    ) {
+
+        if (
+            !id
+        ) {
+
+            throw new Error(
+                "GRN id is required."
+            );
+
+        }
+
+
+        return this.postToInventory(
+            id,
+            {
+
+                ...payload,
+
+                action:
+                    "RETRY_POST_STOCK",
+
+            }
+        );
+
+    },
+
+
+    /* =====================================================
+       GET STOCK POSTING STATUS
+    ===================================================== */
+
+    async getStockPostingStatus(
+        id
+    ) {
+
+        if (
+            !id
+        ) {
+
+            throw new Error(
+                "GRN id is required."
+            );
+
+        }
+
+
+        return request(
+            `${GRN_ENDPOINT}/${id}/stock-posting-status`,
+            {
+
+                method:
+                    "GET",
+
+            }
+        );
+
+    },
+
+
 };
 
+
+/* =========================================================
+   EXPORT
+   ========================================================= */
 
 export default grnService;

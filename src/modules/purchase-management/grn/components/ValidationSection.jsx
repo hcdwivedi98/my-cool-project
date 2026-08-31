@@ -35,11 +35,43 @@ const {
    ========================================================= */
 
 const ValidationSection = ({
+
     mode = "CREATE",
 
     disabled = false,
 
+    /*
+     * Step-32
+     *
+     * These errors come from GRNForm -> validateGRN().
+     *
+     * They may be:
+     *
+     * {
+     *     field: ["items", 0],
+     *     index: 0,
+     *     itemId: "...",
+     *     itemName: "...",
+     *     message: "..."
+     * }
+     */
+
+    validationErrors = [],
+
+    /*
+     * Backward compatibility:
+     *
+     * Step-31 may pass:
+     *
+     * errors={validationErrors}
+     *
+     * Therefore both props are supported.
+     */
+
+    errors: externalErrors,
+
     onValidationChange,
+
 }) => {
 
     const form =
@@ -104,379 +136,565 @@ const ValidationSection = ({
     ===================================================== */
 
     const safeItems =
-        Array.isArray(items)
+        Array.isArray(
+            items
+        )
             ? items
             : [];
 
 
     const safeBatches =
-        Array.isArray(batches)
+        Array.isArray(
+            batches
+        )
             ? batches
             : [];
 
 
     /* =====================================================
-       VALIDATION
+       EXTERNAL VALIDATION ERRORS
     ===================================================== */
 
-    const validation = useMemo(
-        () => {
+    const normalizedExternalErrors =
+        useMemo(
+            () => {
 
-            const errors = [];
+                const source =
+                    Array.isArray(
+                        externalErrors
+                    )
+                        ? externalErrors
+                        : Array.isArray(
+                            validationErrors
+                        )
+                            ? validationErrors
+                            : [];
 
-            const warnings = [];
 
-            /* -------------------------------------------------
-               SUPPLIER
-            ------------------------------------------------- */
+                return source
+                    .map(
+                        (
+                            error
+                        ) => {
 
-            if (!supplierId) {
+                            /* ---------------------------------
+                               STRING ERROR
+                            --------------------------------- */
 
-                errors.push(
-                    "Supplier is required."
-                );
+                            if (
+                                typeof error ===
+                                "string"
+                            ) {
 
-            }
+                                return {
 
+                                    field:
+                                        null,
 
-            /* -------------------------------------------------
-               RECEIVING STORE
-            ------------------------------------------------- */
+                                    index:
+                                        -1,
 
-            if (!storeId) {
+                                    itemId:
+                                        null,
 
-                errors.push(
-                    "Receiving store is required."
-                );
+                                    itemName:
+                                        "",
 
-            }
+                                    message:
+                                        error,
 
+                                };
 
-            /* -------------------------------------------------
-               PURCHASE ORDER
-            ------------------------------------------------- */
+                            }
 
-            if (!purchaseOrderId) {
 
-                warnings.push(
-                    "Purchase Order is not selected. Verify that this is a direct receipt."
-                );
+                            /* ---------------------------------
+                               OBJECT ERROR
+                            --------------------------------- */
 
-            }
+                            return {
 
+                                field:
+                                    error?.field ??
+                                    null,
 
-            /* -------------------------------------------------
-               ITEMS
-            ------------------------------------------------- */
+                                index:
+                                    Number.isInteger(
+                                        error?.index
+                                    )
+                                        ? error.index
+                                        : -1,
 
-            if (
-                safeItems.length === 0
-            ) {
+                                itemId:
+                                    error?.itemId ??
+                                    null,
 
-                errors.push(
-                    "At least one GRN item is required."
-                );
+                                itemName:
+                                    error?.itemName ||
+                                    "",
 
-            }
+                                message:
+                                    error?.message ||
+                                    "",
 
+                            };
 
-            let totalReceived =
-                0;
+                        }
+                    )
+                    .filter(
+                        error =>
+                            Boolean(
+                                error.message
+                            )
+                    );
 
-            let totalAccepted =
-                0;
+            },
+            [
+                externalErrors,
+                validationErrors,
+            ]
+        );
 
-            let totalRejected =
-                0;
 
+    /* =====================================================
+       LIVE VALIDATION
+       ===================================================== */
 
-            safeItems.forEach(
-                (
-                    item,
-                    index
-                ) => {
+    const validation =
+        useMemo(
+            () => {
 
-                    const row =
-                        index + 1;
+                const localErrors = [];
 
+                const warnings = [];
 
-                    const received =
-                        Number(
-                            item?.receivedQuantity
-                        ) || 0;
 
+                /* -----------------------------------------
+                   SUPPLIER
+                ----------------------------------------- */
 
-                    const accepted =
-                        Number(
-                            item?.acceptedQuantity
-                        ) || 0;
+                if (
+                    !supplierId
+                ) {
 
-
-                    const rejected =
-                        Number(
-                            item?.rejectedQuantity
-                        ) || 0;
-
-
-                    const pending =
-                        Number(
-                            item?.pendingQuantity
-                        ) || 0;
-
-
-                    totalReceived +=
-                        received;
-
-
-                    totalAccepted +=
-                        accepted;
-
-
-                    totalRejected +=
-                        rejected;
-
-
-                    /* -----------------------------------------
-                       RECEIVED QTY
-                    ----------------------------------------- */
-
-                    if (
-                        received <= 0
-                    ) {
-
-                        warnings.push(
-                            `Item ${row}: received quantity is zero.`
-                        );
-
-                    }
-
-
-                    /* -----------------------------------------
-                       PENDING QTY
-                    ----------------------------------------- */
-
-                    if (
-                        pending >= 0 &&
-                        received >
-                        pending
-                    ) {
-
-                        errors.push(
-                            `Item ${row}: received quantity cannot exceed pending quantity.`
-                        );
-
-                    }
-
-
-                    /* -----------------------------------------
-                       ACCEPTED + REJECTED
-                    ----------------------------------------- */
-
-                    if (
-                        accepted +
-                        rejected !==
-                        received
-                    ) {
-
-                        errors.push(
-                            `Item ${row}: accepted quantity plus rejected quantity must equal received quantity.`
-                        );
-
-                    }
-
-
-                    /* -----------------------------------------
-                       BATCH
-                    ----------------------------------------- */
-
-                    if (
-                        received > 0 &&
-                        !item?.batchNumber
-                    ) {
-
-                        warnings.push(
-                            `Item ${row}: batch number is missing.`
-                        );
-
-                    }
-
-
-                    /* -----------------------------------------
-                       EXPIRY
-                    ----------------------------------------- */
-
-                    if (
-                        received > 0 &&
-                        !item?.expiryDate
-                    ) {
-
-                        warnings.push(
-                            `Item ${row}: expiry date is missing.`
-                        );
-
-                    }
+                    localErrors.push(
+                        "Supplier is required."
+                    );
 
                 }
+
+
+                /* -----------------------------------------
+                   RECEIVING STORE
+                ----------------------------------------- */
+
+                if (
+                    !storeId
+                ) {
+
+                    localErrors.push(
+                        "Receiving store is required."
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   PURCHASE ORDER
+                ----------------------------------------- */
+
+                if (
+                    !purchaseOrderId
+                ) {
+
+                    warnings.push(
+                        "Purchase Order is not selected. Verify that this is a direct receipt."
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   ITEMS
+                ----------------------------------------- */
+
+                if (
+                    safeItems.length ===
+                    0
+                ) {
+
+                    localErrors.push(
+                        "At least one GRN item is required."
+                    );
+
+                }
+
+
+                let totalReceived =
+                    0;
+
+
+                let totalAccepted =
+                    0;
+
+
+                let totalRejected =
+                    0;
+
+
+                safeItems.forEach(
+                    (
+                        item,
+                        index
+                    ) => {
+
+                        const row =
+                            index + 1;
+
+
+                        const received =
+                            Number(
+                                item?.receivedQuantity
+                            ) || 0;
+
+
+                        const accepted =
+                            Number(
+                                item?.acceptedQuantity
+                            ) || 0;
+
+
+                        const rejected =
+                            Number(
+                                item?.rejectedQuantity
+                            ) || 0;
+
+
+                        const pending =
+                            Number(
+                                item?.pendingQuantity
+                            ) || 0;
+
+
+                        totalReceived +=
+                            received;
+
+
+                        totalAccepted +=
+                            accepted;
+
+
+                        totalRejected +=
+                            rejected;
+
+
+                        /* ---------------------------------
+                           RECEIVED QTY
+                        --------------------------------- */
+
+                        if (
+                            received <=
+                            0
+                        ) {
+
+                            warnings.push(
+                                `Item ${row}: received quantity is zero.`
+                            );
+
+                        }
+
+
+                        /* ---------------------------------
+                           PENDING QTY
+                        --------------------------------- */
+
+                        if (
+                            pending >=
+                                0 &&
+                            received >
+                                pending
+                        ) {
+
+                            localErrors.push(
+                                `Item ${row}: received quantity cannot exceed pending quantity.`
+                            );
+
+                        }
+
+
+                        /* ---------------------------------
+                           ACCEPTED + REJECTED
+                        --------------------------------- */
+
+                        if (
+                            accepted +
+                                rejected !==
+                            received
+                        ) {
+
+                            localErrors.push(
+                                `Item ${row}: accepted quantity plus rejected quantity must equal received quantity.`
+                            );
+
+                        }
+
+
+                        /* ---------------------------------
+                           BATCH
+                        --------------------------------- */
+
+                        if (
+                            received >
+                                0 &&
+                            !item?.batchNumber
+                        ) {
+
+                            warnings.push(
+                                `Item ${row}: batch number is missing.`
+                            );
+
+                        }
+
+
+                        /* ---------------------------------
+                           EXPIRY
+                        --------------------------------- */
+
+                        if (
+                            received >
+                                0 &&
+                            !item?.expiryDate
+                        ) {
+
+                            warnings.push(
+                                `Item ${row}: expiry date is missing.`
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /* -----------------------------------------
+                   BATCH VALIDATION
+                ----------------------------------------- */
+
+                safeBatches.forEach(
+                    (
+                        batch,
+                        index
+                    ) => {
+
+                        const row =
+                            index + 1;
+
+
+                        const quantity =
+                            Number(
+                                batch?.quantity
+                            ) || 0;
+
+
+                        const accepted =
+                            Number(
+                                batch?.acceptedQuantity
+                            ) || 0;
+
+
+                        const rejected =
+                            Number(
+                                batch?.rejectedQuantity
+                            ) || 0;
+
+
+                        if (
+                            !batch?.batchNumber
+                        ) {
+
+                            localErrors.push(
+                                `Batch ${row}: batch number is required.`
+                            );
+
+                        }
+
+
+                        if (
+                            quantity >
+                                0 &&
+                            !batch?.expiryDate
+                        ) {
+
+                            localErrors.push(
+                                `Batch ${row}: expiry date is required.`
+                            );
+
+                        }
+
+
+                        if (
+                            accepted +
+                                rejected >
+                            quantity
+                        ) {
+
+                            localErrors.push(
+                                `Batch ${row}: accepted and rejected quantity cannot exceed batch quantity.`
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /* -----------------------------------------
+                   QUALITY
+                ----------------------------------------- */
+
+                if (
+                    !qualityStatus
+                ) {
+
+                    warnings.push(
+                        "Quality status has not been selected."
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   INSPECTION
+                ----------------------------------------- */
+
+                if (
+                    !inspectionStatus
+                ) {
+
+                    warnings.push(
+                        "Inspection status has not been selected."
+                    );
+
+                }
+
+
+                /* -----------------------------------------
+                   STATUS
+                ----------------------------------------- */
+
+                let status =
+                    "VALID";
+
+
+                if (
+                    localErrors.length >
+                    0
+                ) {
+
+                    status =
+                        "ERROR";
+
+                }
+                else if (
+                    warnings.length >
+                    0
+                ) {
+
+                    status =
+                        "WARNING";
+
+                }
+
+
+                return {
+
+                    status,
+
+                    errors:
+                        localErrors,
+
+                    warnings,
+
+                    totalReceived,
+
+                    totalAccepted,
+
+                    totalRejected,
+
+                };
+
+            },
+            [
+                safeItems,
+                safeBatches,
+                supplierId,
+                storeId,
+                purchaseOrderId,
+                qualityStatus,
+                inspectionStatus,
+            ]
+        );
+
+
+    /* =====================================================
+       FINAL DISPLAY ERRORS
+       ===================================================== */
+
+    const displayErrors =
+        normalizedExternalErrors.length >
+        0
+            ? normalizedExternalErrors
+            : validation.errors.map(
+                (
+                    message
+                ) => ({
+
+                    field:
+                        null,
+
+                    index:
+                        -1,
+
+                    itemId:
+                        null,
+
+                    itemName:
+                        "",
+
+                    message,
+
+                })
             );
 
 
-            /* -------------------------------------------------
-               BATCH VALIDATION
-            ------------------------------------------------- */
+    /* =====================================================
+       HAS EXTERNAL ERRORS
+    ===================================================== */
 
-            safeBatches.forEach(
-                (
-                    batch,
-                    index
-                ) => {
-
-                    const row =
-                        index + 1;
+    const hasExternalErrors =
+        normalizedExternalErrors.length >
+        0;
 
 
-                    const quantity =
-                        Number(
-                            batch?.quantity
-                        ) || 0;
+    /* =====================================================
+       FINAL STATUS
+       ===================================================== */
+
+    const finalHasErrors =
+        hasExternalErrors ||
+        validation.status ===
+        "ERROR";
 
 
-                    const accepted =
-                        Number(
-                            batch?.acceptedQuantity
-                        ) || 0;
+    const finalHasWarnings =
+        !finalHasErrors &&
+        validation.status ===
+        "WARNING";
 
 
-                    const rejected =
-                        Number(
-                            batch?.rejectedQuantity
-                        ) || 0;
-
-
-                    if (
-                        !batch?.batchNumber
-                    ) {
-
-                        errors.push(
-                            `Batch ${row}: batch number is required.`
-                        );
-
-                    }
-
-
-                    if (
-                        quantity >
-                        0 &&
-                        !batch?.expiryDate
-                    ) {
-
-                        errors.push(
-                            `Batch ${row}: expiry date is required.`
-                        );
-
-                    }
-
-
-                    if (
-                        accepted +
-                        rejected >
-                        quantity
-                    ) {
-
-                        errors.push(
-                            `Batch ${row}: accepted and rejected quantity cannot exceed batch quantity.`
-                        );
-
-                    }
-
-                }
-            );
-
-
-            /* -------------------------------------------------
-               QUALITY
-            ------------------------------------------------- */
-
-            if (
-                !qualityStatus
-            ) {
-
-                warnings.push(
-                    "Quality status has not been selected."
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               INSPECTION
-            ------------------------------------------------- */
-
-            if (
-                !inspectionStatus
-            ) {
-
-                warnings.push(
-                    "Inspection status has not been selected."
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               FINAL RESULT
-            ------------------------------------------------- */
-
-            let status =
-                "VALID";
-
-
-            if (
-                errors.length >
-                0
-            ) {
-
-                status =
-                    "ERROR";
-
-            }
-            else if (
-                warnings.length >
-                0
-            ) {
-
-                status =
-                    "WARNING";
-
-            }
-
-
-            return {
-
-                status,
-
-                errors,
-
-                warnings,
-
-                totalReceived,
-
-                totalAccepted,
-
-                totalRejected,
-
-            };
-
-        },
-        [
-            safeItems,
-            safeBatches,
-            supplierId,
-            storeId,
-            purchaseOrderId,
-            qualityStatus,
-            inspectionStatus,
-        ]
-    );
+    const finalIsValid =
+        !finalHasErrors &&
+        !finalHasWarnings;
 
 
     /* =====================================================
@@ -486,15 +704,28 @@ const ValidationSection = ({
     useEffect(
         () => {
 
+            /*
+             * Keep existing form fields.
+             */
+
             form.setFieldsValue({
 
                 validationStatus:
-                    validation.status,
+                    finalHasErrors
+                        ? "ERROR"
+                        : finalHasWarnings
+                            ? "WARNING"
+                            : "VALID",
 
                 validationErrors:
-                    validation.errors.join(
-                        "\n"
-                    ),
+                    displayErrors
+                        .map(
+                            error =>
+                                error.message
+                        )
+                        .join(
+                            "\n"
+                        ),
 
             });
 
@@ -504,38 +735,47 @@ const ValidationSection = ({
                 "function"
             ) {
 
-                onValidationChange(
-                    validation
-                );
+                onValidationChange({
+
+                    status:
+                        finalHasErrors
+                            ? "ERROR"
+                            : finalHasWarnings
+                                ? "WARNING"
+                                : "VALID",
+
+                    errors:
+                        displayErrors,
+
+                    warnings:
+                        validation.warnings,
+
+                    totalReceived:
+                        validation.totalReceived,
+
+                    totalAccepted:
+                        validation.totalAccepted,
+
+                    totalRejected:
+                        validation.totalRejected,
+
+                });
 
             }
 
         },
         [
             form,
-            validation,
+            finalHasErrors,
+            finalHasWarnings,
+            displayErrors,
+            validation.warnings,
+            validation.totalReceived,
+            validation.totalAccepted,
+            validation.totalRejected,
             onValidationChange,
         ]
     );
-
-
-    /* =====================================================
-       STATUS DISPLAY
-    ===================================================== */
-
-    const isValid =
-        validation.status ===
-        "VALID";
-
-
-    const hasErrors =
-        validation.status ===
-        "ERROR";
-
-
-    const hasWarnings =
-        validation.status ===
-        "WARNING";
 
 
     /* =====================================================
@@ -558,13 +798,16 @@ const ValidationSection = ({
                         GRN Validation
                     </span>
 
+
                     {
-                        isValid && (
+                        finalIsValid && (
 
                             <Tag
+
                                 icon={
                                     <CheckCircleOutlined />
                                 }
+
                                 color="success"
                             >
                                 Valid
@@ -575,12 +818,14 @@ const ValidationSection = ({
 
 
                     {
-                        hasWarnings && (
+                        finalHasWarnings && (
 
                             <Tag
+
                                 icon={
                                     <WarningOutlined />
                                 }
+
                                 color="warning"
                             >
                                 Warning
@@ -591,12 +836,14 @@ const ValidationSection = ({
 
 
                     {
-                        hasErrors && (
+                        finalHasErrors && (
 
                             <Tag
+
                                 icon={
                                     <CloseCircleOutlined />
                                 }
+
                                 color="error"
                             >
                                 Error
@@ -714,11 +961,11 @@ const ValidationSection = ({
 
 
             {/* =================================================
-                ERRORS
+                STRUCTURED VALIDATION ERRORS
             ================================================= */}
 
             {
-                validation.errors.length >
+                displayErrors.length >
                 0 && (
 
                     <Alert
@@ -737,42 +984,151 @@ const ValidationSection = ({
                         }
 
                         message={
-                            `Validation Errors (${validation.errors.length})`
+                            `Validation Errors (${displayErrors.length})`
                         }
 
                         description={
 
-                            <ul
+                            <div
                                 style={{
-                                    margin:
-                                        "8px 0 0 18px",
-                                    padding:
-                                        0,
+                                    marginTop:
+                                        8,
                                 }}
                             >
 
                                 {
-                                    validation.errors.map(
+                                    displayErrors.map(
                                         (
                                             error,
                                             index
-                                        ) => (
+                                        ) => {
 
-                                            <li
-                                                key={
-                                                    `grn-validation-error-${index}`
-                                                }
-                                            >
-                                                {
-                                                    error
-                                                }
-                                            </li>
+                                            const hasItemIndex =
+                                                Number.isInteger(
+                                                    error?.index
+                                                ) &&
+                                                error.index >=
+                                                0;
 
-                                        )
+
+                                            const itemLabel =
+                                                hasItemIndex
+                                                    ? (
+                                                        error?.itemName
+                                                            ? `Item ${error.index + 1} — ${error.itemName}`
+                                                            : `Item ${error.index + 1}`
+                                                    )
+                                                    : null;
+
+
+                                            return (
+
+                                                <div
+
+                                                    key={
+                                                        `grn-validation-error-${index}`
+                                                    }
+
+                                                    style={{
+                                                        marginBottom:
+                                                            index ===
+                                                            displayErrors.length - 1
+                                                                ? 0
+                                                                : 8,
+
+                                                        paddingBottom:
+                                                            index ===
+                                                            displayErrors.length - 1
+                                                                ? 0
+                                                                : 8,
+
+                                                        borderBottom:
+                                                            index ===
+                                                            displayErrors.length - 1
+                                                                ? "none"
+                                                                : "1px solid #f0f0f0",
+                                                    }}
+
+                                                >
+
+                                                    {
+                                                        itemLabel && (
+
+                                                            <div
+                                                                style={{
+                                                                    fontWeight:
+                                                                        600,
+
+                                                                    marginBottom:
+                                                                        2,
+                                                                }}
+                                                            >
+                                                                {
+                                                                    itemLabel
+                                                                }
+                                                            </div>
+
+                                                        )
+                                                    }
+
+
+                                                    {
+                                                        error?.field &&
+                                                        Array.isArray(
+                                                            error.field
+                                                        ) &&
+                                                        error.field.length >
+                                                        0 && (
+
+                                                            <Text
+                                                                type="secondary"
+                                                                style={{
+                                                                    display:
+                                                                        "block",
+
+                                                                    fontSize:
+                                                                        12,
+
+                                                                    marginBottom:
+                                                                        2,
+                                                                }}
+                                                            >
+                                                                Field:{" "}
+                                                                {
+                                                                    error.field
+                                                                        .filter(
+                                                                            value =>
+                                                                                typeof value !==
+                                                                                "number"
+                                                                        )
+                                                                        .join(
+                                                                            "."
+                                                                        ) ||
+                                                                    "General"
+                                                                }
+                                                            </Text>
+
+                                                        )
+                                                    }
+
+
+                                                    <Text
+                                                        type="danger"
+                                                    >
+                                                        {
+                                                            error.message
+                                                        }
+                                                    </Text>
+
+                                                </div>
+
+                                            );
+
+                                        }
                                     )
                                 }
 
-                            </ul>
+                            </div>
 
                         }
 
@@ -815,6 +1171,7 @@ const ValidationSection = ({
                                 style={{
                                     margin:
                                         "8px 0 0 18px",
+
                                     padding:
                                         0,
                                 }}
@@ -856,7 +1213,7 @@ const ValidationSection = ({
             ================================================= */}
 
             {
-                isValid && (
+                finalIsValid && (
 
                     <Alert
 

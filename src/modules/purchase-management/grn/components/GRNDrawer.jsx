@@ -10,6 +10,10 @@ import GRNForm
 import "../styles/grn.css";
 
 
+/* =========================================================
+   GRN DRAWER
+   ========================================================= */
+
 const GRNDrawer = ({
 
     open = false,
@@ -44,9 +48,13 @@ const GRNDrawer = ({
 
             width="82vw"
 
-            closable={false}
+            closable={
+                false
+            }
 
-            destroyOnClose={false}
+            destroyOnClose={
+                false
+            }
 
             className="grn-drawer"
 
@@ -103,6 +111,7 @@ const GRNDrawer = ({
                                         : "Create Goods Receipt Note"
                             }
                         </div>
+
 
                         <div
                             className="grn-drawer-subtitle"

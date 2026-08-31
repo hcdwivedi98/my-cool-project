@@ -702,49 +702,46 @@ export const normalizeGRNItem = (
             Math.max(
                 0,
                 toNumber(
-                    item?.acceptedQuantity,
-                    receivedQuantity -
-                    rejectedQuantity
+                    item?.acceptedQuantity ??
+                    (
+                        receivedQuantity -
+                        rejectedQuantity
+                    )
                 )
             )
         );
 
 
-    const pendingQuantity =
-        getPendingQuantity(
-            item
+    const taxableAmount =
+        calculateTaxableAmount(
+            {
+                ...item,
+                receivedQuantity,
+            }
         );
 
 
-    const outstandingQuantity =
-        Math.max(
-            0,
-            pendingQuantity -
-            receivedQuantity
+    const taxAmount =
+        calculateTaxAmount(
+            {
+                ...item,
+                receivedQuantity,
+            }
+        );
+
+
+    const lineTotal =
+        calculateLineTotal(
+            {
+                ...item,
+                receivedQuantity,
+            }
         );
 
 
     return {
 
         ...item,
-
-        orderedQuantity:
-            Math.max(
-                0,
-                toNumber(
-                    item?.orderedQuantity
-                )
-            ),
-
-        previouslyReceivedQuantity:
-            Math.max(
-                0,
-                toNumber(
-                    item?.previouslyReceivedQuantity
-                )
-            ),
-
-        pendingQuantity,
 
         receivedQuantity,
 
@@ -754,64 +751,19 @@ export const normalizeGRNItem = (
 
         damagedQuantity,
 
-        outstandingQuantity,
-
-        purchaseRate:
-            Math.max(
-                0,
-                toNumber(
-                    item?.purchaseRate ??
-                    item?.unitRate
-                )
-            ),
-
-        discountPercent:
-            Math.max(
-                0,
-                toNumber(
-                    item?.discountPercent
-                )
-            ),
-
-        discountAmount:
-            calculateLineDiscount(
+        outstandingQuantity:
+            getOutstandingQuantity(
                 {
                     ...item,
                     receivedQuantity,
                 }
             ),
 
-        taxableAmount:
-            calculateTaxableAmount(
-                {
-                    ...item,
-                    receivedQuantity,
-                }
-            ),
+        taxableAmount,
 
-        taxPercent:
-            Math.max(
-                0,
-                toNumber(
-                    item?.taxPercent
-                )
-            ),
+        taxAmount,
 
-        taxAmount:
-            calculateTaxAmount(
-                {
-                    ...item,
-                    receivedQuantity,
-                }
-            ),
-
-        lineTotal:
-            calculateLineTotal(
-                {
-                    ...item,
-                    receivedQuantity,
-                }
-            ),
+        lineTotal,
 
     };
 
@@ -823,14 +775,15 @@ export const normalizeGRNItem = (
    ========================================================= */
 
 export const normalizeGRNItems = (
-    items
+    items = []
 ) => {
 
     return safeArray(
         items
-    ).map(
-        normalizeGRNItem
-    );
+    )
+        .map(
+            normalizeGRNItem
+        );
 
 };
 
@@ -840,8 +793,8 @@ export const normalizeGRNItems = (
    ========================================================= */
 
 export const calculateGRNTotals = (
-    items,
-    extraCharges = {}
+    items = [],
+    values = {}
 ) => {
 
     const normalizedItems =
@@ -850,191 +803,194 @@ export const calculateGRNTotals = (
         );
 
 
-    const subtotal =
-        roundMoney(
-            normalizedItems.reduce(
-                (
-                    total,
-                    item
-                ) =>
-                    total +
+    let totalItems =
+        0;
+
+
+    let totalOrderedQuantity =
+        0;
+
+
+    let totalPendingQuantity =
+        0;
+
+
+    let totalReceivedQuantity =
+        0;
+
+
+    let totalAcceptedQuantity =
+        0;
+
+
+    let totalRejectedQuantity =
+        0;
+
+
+    let totalDamagedQuantity =
+        0;
+
+
+    let subtotal =
+        0;
+
+
+    let discountAmount =
+        0;
+
+
+    let taxAmount =
+        0;
+
+
+    normalizedItems.forEach(
+        (
+            item
+        ) => {
+
+            totalItems +=
+                1;
+
+
+            totalOrderedQuantity +=
+                Math.max(
+                    0,
                     toNumber(
-                        item?.taxableAmount
-                    ),
-                0
-            )
+                        item?.orderedQuantity
+                    )
+                );
+
+
+            totalPendingQuantity +=
+                getPendingQuantity(
+                    item
+                );
+
+
+            totalReceivedQuantity +=
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.receivedQuantity
+                    )
+                );
+
+
+            totalAcceptedQuantity +=
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.acceptedQuantity
+                    )
+                );
+
+
+            totalRejectedQuantity +=
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.rejectedQuantity
+                    )
+                );
+
+
+            totalDamagedQuantity +=
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.damagedQuantity
+                    )
+                );
+
+
+            const quantity =
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.receivedQuantity
+                    )
+                );
+
+
+            const unitRate =
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.purchaseRate ??
+                        item?.unitRate
+                    )
+                );
+
+
+            const grossAmount =
+                quantity *
+                unitRate;
+
+
+            subtotal +=
+                grossAmount;
+
+
+            discountAmount +=
+                calculateLineDiscount(
+                    item
+                );
+
+
+            taxAmount +=
+                calculateTaxAmount(
+                    item
+                );
+
+        }
+    );
+
+
+    subtotal =
+        roundMoney(
+            subtotal
         );
 
 
-    const discountAmount =
+    discountAmount =
         roundMoney(
-            normalizedItems.reduce(
-                (
-                    total,
-                    item
-                ) =>
-                    total +
-                    toNumber(
-                        item?.discountAmount
-                    ),
-                0
-            )
+            discountAmount
         );
 
 
-    const taxAmount =
+    taxAmount =
         roundMoney(
-            normalizedItems.reduce(
-                (
-                    total,
-                    item
-                ) =>
-                    total +
-                    toNumber(
-                        item?.taxAmount
-                    ),
-                0
-            )
+            taxAmount
         );
 
 
     const otherCharges =
         roundMoney(
-            toNumber(
-                extraCharges?.otherCharges
-            )
+            values?.otherCharges
         );
 
 
     const roundOff =
         roundMoney(
-            toNumber(
-                extraCharges?.roundOff
-            )
+            values?.roundOff
         );
 
 
     const grandTotal =
         roundMoney(
-            subtotal +
+            subtotal -
+            discountAmount +
             taxAmount +
             otherCharges +
             roundOff
         );
 
 
-    const totalItems =
-        normalizedItems.length;
-
-
-    const totalOrderedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.orderedQuantity
-                ),
-            0
-        );
-
-
-    const totalPreviouslyReceivedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.previouslyReceivedQuantity
-                ),
-            0
-        );
-
-
-    const totalPendingQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.pendingQuantity
-                ),
-            0
-        );
-
-
-    const totalReceivedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.receivedQuantity
-                ),
-            0
-        );
-
-
-    const totalAcceptedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.acceptedQuantity
-                ),
-            0
-        );
-
-
-    const totalRejectedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.rejectedQuantity
-                ),
-            0
-        );
-
-
-    const totalDamagedQuantity =
-        normalizedItems.reduce(
-            (
-                total,
-                item
-            ) =>
-                total +
-                toNumber(
-                    item?.damagedQuantity
-                ),
-            0
-        );
-
-
     return {
-
-        items:
-            normalizedItems,
 
         totalItems,
 
         totalOrderedQuantity,
-
-        totalPreviouslyReceivedQuantity,
 
         totalPendingQuantity,
 
@@ -1061,8 +1017,6 @@ export const calculateGRNTotals = (
     };
 
 };
-
-
 /* =========================================================
    VALIDATE RECEIVED QUANTITY
    ========================================================= */
@@ -1073,34 +1027,29 @@ export const validateReceivedQuantity = (
 
     const errors = [];
 
-
     const received =
-        toNumber(
-            item?.receivedQuantity
+        Math.max(
+            0,
+            toNumber(
+                item?.receivedQuantity
+            )
         );
-
 
     const pending =
-        getPendingQuantity(
-            item
+        Math.max(
+            0,
+            getPendingQuantity(
+                item
+            )
         );
 
 
-    if (
-        GRN_QUANTITY_RULES.ALLOW_NEGATIVE ===
-        false &&
-        received < 0
-    ) {
-
-        errors.push(
-            "Received quantity cannot be negative."
-        );
-
-    }
-
+    /*
+     * Excess receipt is not allowed.
+     */
 
     if (
-        GRN_QUANTITY_RULES.ALLOW_OVER_RECEIPT ===
+        GRN_QUANTITY_RULES.ALLOW_EXCESS_RECEIPT ===
         false &&
         received >
         pending
@@ -1108,6 +1057,57 @@ export const validateReceivedQuantity = (
 
         errors.push(
             `Received quantity cannot exceed pending quantity (${pending}).`
+        );
+
+    }
+
+
+    /*
+     * Explicit business rule:
+     * received quantity cannot exceed pending quantity.
+     */
+
+    if (
+        GRN_QUANTITY_RULES.RECEIVED_CANNOT_EXCEED_PENDING ===
+        true &&
+        received >
+        pending
+    ) {
+
+        const message =
+            `Received quantity cannot exceed pending quantity (${pending}).`;
+
+
+        if (
+            !errors.includes(
+                message
+            )
+        ) {
+
+            errors.push(
+                message
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Minimum received quantity.
+     */
+
+    if (
+        GRN_QUANTITY_RULES.MIN_RECEIVED_QUANTITY !==
+        undefined &&
+        received <
+        Number(
+            GRN_QUANTITY_RULES.MIN_RECEIVED_QUANTITY
+        )
+    ) {
+
+        errors.push(
+            `Received quantity must be at least ${GRN_QUANTITY_RULES.MIN_RECEIVED_QUANTITY}.`
         );
 
     }
@@ -1222,8 +1222,13 @@ export const validateGRNBatch = (
         item?.expiryDate;
 
 
+    /* -----------------------------------------------------
+       BATCH NUMBER
+    ----------------------------------------------------- */
+
     if (
-        GRN_BATCH_RULES.REQUIRE_BATCH_NUMBER &&
+        GRN_BATCH_RULES.BATCH_NUMBER_REQUIRED ===
+        true &&
         !batchNumber
     ) {
 
@@ -1234,8 +1239,13 @@ export const validateGRNBatch = (
     }
 
 
+    /* -----------------------------------------------------
+       MANUFACTURING DATE
+    ----------------------------------------------------- */
+
     if (
-        GRN_BATCH_RULES.REQUIRE_MANUFACTURING_DATE &&
+        GRN_BATCH_RULES.MANUFACTURING_DATE_REQUIRED ===
+        true &&
         !manufacturingDate
     ) {
 
@@ -1246,8 +1256,13 @@ export const validateGRNBatch = (
     }
 
 
+    /* -----------------------------------------------------
+       EXPIRY DATE
+    ----------------------------------------------------- */
+
     if (
-        GRN_BATCH_RULES.REQUIRE_EXPIRY_DATE &&
+        GRN_BATCH_RULES.EXPIRY_DATE_REQUIRED ===
+        true &&
         !expiryDate
     ) {
 
@@ -1261,7 +1276,6 @@ export const validateGRNBatch = (
     return errors;
 
 };
-
 
 /* =========================================================
    VALIDATE EXPIRY
@@ -1287,12 +1301,17 @@ export const validateGRNExpiry = (
         );
 
 
+    /*
+     * No expiry date.
+     */
+
     if (
         !expiryTime
     ) {
 
         if (
-            GRN_BATCH_RULES.REQUIRE_EXPIRY_DATE
+            GRN_BATCH_RULES.EXPIRY_DATE_REQUIRED ===
+            true
         ) {
 
             errors.push(
@@ -1307,19 +1326,28 @@ export const validateGRNExpiry = (
     }
 
 
+    /*
+     * Expired batch.
+     */
+
     if (
         grnTime &&
         expiryTime <=
         grnTime &&
-        !GRN_BATCH_RULES.ALLOW_EXPIRED_BATCH
+        GRN_BATCH_RULES.ALLOW_EXPIRED_BATCH ===
+        false
     ) {
 
         errors.push(
-            "Expiry date must be after the GRN date."
+            "Batch is expired and cannot be received."
         );
 
     }
 
+
+    /*
+     * Manufacturing date → expiry date.
+     */
 
     const manufacturingTime =
         dateOnlyTime(
@@ -1330,7 +1358,9 @@ export const validateGRNExpiry = (
     if (
         manufacturingTime &&
         expiryTime <=
-        manufacturingTime
+        manufacturingTime &&
+        GRN_BATCH_RULES.EXPIRY_MUST_BE_AFTER_MANUFACTURING ===
+        true
     ) {
 
         errors.push(
@@ -1343,7 +1373,6 @@ export const validateGRNExpiry = (
     return errors;
 
 };
-
 
 /* =========================================================
    VALIDATE MFG DATE
@@ -1374,7 +1403,8 @@ export const validateManufacturingDate = (
     ) {
 
         if (
-            GRN_BATCH_RULES.REQUIRE_MANUFACTURING_DATE
+            GRN_BATCH_RULES.MANUFACTURING_DATE_REQUIRED ===
+            true
         ) {
 
             errors.push(
@@ -1388,6 +1418,10 @@ export const validateManufacturingDate = (
 
     }
 
+
+    /*
+     * Manufacturing date cannot be after GRN date.
+     */
 
     if (
         grnTime &&
@@ -1406,9 +1440,8 @@ export const validateManufacturingDate = (
 
 };
 
-
 /* =========================================================
-   VALIDATE SINGLE ITEM
+   VALIDATE SINGLE GRN ITEM
    ========================================================= */
 
 export const validateGRNItem = (
@@ -1418,6 +1451,32 @@ export const validateGRNItem = (
 
     const errors = [];
 
+
+    /* -----------------------------------------------------
+       BASIC ITEM VALIDATION
+    ----------------------------------------------------- */
+
+    const itemName =
+        normalizeText(
+            item?.itemName ||
+            item?.drugName
+        );
+
+
+    if (
+        !itemName
+    ) {
+
+        errors.push(
+            "Item name is required."
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       QUANTITY VALIDATION
+    ----------------------------------------------------- */
 
     errors.push(
         ...validateReceivedQuantity(
@@ -1433,15 +1492,31 @@ export const validateGRNItem = (
     );
 
 
-    const received =
-        toNumber(
-            item?.receivedQuantity
+    /* -----------------------------------------------------
+       RECEIVED QUANTITY
+    ----------------------------------------------------- */
+
+    const receivedQuantity =
+        Math.max(
+            0,
+            toNumber(
+                item?.receivedQuantity
+            )
         );
 
 
+    /*
+     * Batch/date validation is required only
+     * when quantity is actually being received.
+     */
+
     if (
-        received > 0
+        receivedQuantity > 0
     ) {
+
+        /* -----------------------------------------------
+           BATCH
+        ----------------------------------------------- */
 
         errors.push(
             ...validateGRNBatch(
@@ -1450,6 +1525,10 @@ export const validateGRNItem = (
         );
 
 
+        /* -----------------------------------------------
+           EXPIRY
+        ----------------------------------------------- */
+
         errors.push(
             ...validateGRNExpiry(
                 item,
@@ -1457,6 +1536,10 @@ export const validateGRNItem = (
             )
         );
 
+
+        /* -----------------------------------------------
+           MANUFACTURING DATE
+        ----------------------------------------------- */
 
         errors.push(
             ...validateManufacturingDate(
@@ -1468,26 +1551,138 @@ export const validateGRNItem = (
     }
 
 
+    /* -----------------------------------------------------
+       PURCHASE RATE
+    ----------------------------------------------------- */
+
+    const purchaseRate =
+        toNumber(
+            item?.purchaseRate ??
+            item?.unitRate
+        );
+
+
+    if (
+        purchaseRate < 0
+    ) {
+
+        errors.push(
+            "Purchase rate cannot be negative."
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       TAX
+    ----------------------------------------------------- */
+
+    const taxPercent =
+        toNumber(
+            item?.taxPercent
+        );
+
+
+    if (
+        taxPercent < 0
+    ) {
+
+        errors.push(
+            "Tax percentage cannot be negative."
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       DISCOUNT
+    ----------------------------------------------------- */
+
+    const discountPercent =
+        toNumber(
+            item?.discountPercent
+        );
+
+
+    if (
+        discountPercent < 0
+    ) {
+
+        errors.push(
+            "Discount percentage cannot be negative."
+        );
+
+    }
+
+
+    if (
+        discountPercent > 100
+    ) {
+
+        errors.push(
+            "Discount percentage cannot exceed 100%."
+        );
+
+    }
+
+
     return errors;
 
 };
 
 
 /* =========================================================
-   VALIDATE ALL ITEMS
+   VALIDATE ALL GRN ITEMS
    ========================================================= */
 
 export const validateGRNItems = (
-    items,
+    items = [],
     options = {}
 ) => {
 
     const errors = [];
 
 
-    safeArray(
-        items
-    ).forEach(
+    const safeItems =
+        safeArray(
+            items
+        );
+
+
+    /* -----------------------------------------------------
+       ITEMS REQUIRED
+    ----------------------------------------------------- */
+
+    if (
+        safeItems.length === 0
+    ) {
+
+        errors.push({
+
+            field:
+                [
+                    "items",
+                ],
+
+            index:
+                -1,
+
+            message:
+                "At least one GRN item is required.",
+
+        });
+
+
+        return errors;
+
+    }
+
+
+    /* -----------------------------------------------------
+       VALIDATE EACH ITEM
+    ----------------------------------------------------- */
+
+    safeItems.forEach(
         (
             item,
             index
@@ -1501,7 +1696,25 @@ export const validateGRNItems = (
 
 
             itemErrors.forEach(
-                message => {
+                (
+                    validationError
+                ) => {
+
+                    const errorMessage =
+                        typeof validationError ===
+                            "string"
+                            ? validationError
+                            : validationError?.message;
+
+
+                    if (
+                        !errorMessage
+                    ) {
+
+                        return;
+
+                    }
+
 
                     errors.push({
 
@@ -1513,12 +1726,99 @@ export const validateGRNItems = (
 
                         index,
 
-                        message,
+                        itemId:
+                            item?.id ??
+                            null,
+
+                        itemName:
+                            item?.itemName ||
+                            item?.drugName ||
+                            "",
+
+                        message:
+                            errorMessage,
 
                     });
 
                 }
             );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       DUPLICATE ITEM CHECK
+    ----------------------------------------------------- */
+
+    const itemKeys =
+        new Map();
+
+
+    safeItems.forEach(
+        (
+            item,
+            index
+        ) => {
+
+            const key =
+                normalizeText(
+                    item?.drugId ??
+                    item?.itemCode ??
+                    item?.itemName ??
+                    item?.drugName
+                )
+                    .toUpperCase();
+
+
+            if (
+                !key
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                itemKeys.has(
+                    key
+                )
+            ) {
+
+                errors.push({
+
+                    field:
+                        [
+                            "items",
+                            index,
+                        ],
+
+                    index,
+
+                    itemId:
+                        item?.id ??
+                        null,
+
+                    itemName:
+                        item?.itemName ||
+                        item?.drugName ||
+                        "",
+
+                    message:
+                        "Duplicate GRN item detected.",
+
+                });
+
+            }
+            else {
+
+                itemKeys.set(
+                    key,
+                    index
+                );
+
+            }
 
         }
     );
@@ -1530,7 +1830,7 @@ export const validateGRNItems = (
 
 
 /* =========================================================
-   VALIDATE HEADER
+   VALIDATE GRN HEADER
    ========================================================= */
 
 export const validateGRNHeader = (
@@ -1540,6 +1840,10 @@ export const validateGRNHeader = (
     const errors = [];
 
 
+    /* -----------------------------------------------------
+       GRN NUMBER
+    ----------------------------------------------------- */
+
     if (
         !normalizeText(
             values?.grnNumber
@@ -1547,6 +1851,7 @@ export const validateGRNHeader = (
     ) {
 
         errors.push({
+
             field:
                 [
                     "grnNumber",
@@ -1554,16 +1859,22 @@ export const validateGRNHeader = (
 
             message:
                 "GRN number is required.",
+
         });
 
     }
 
+
+    /* -----------------------------------------------------
+       GRN DATE
+    ----------------------------------------------------- */
 
     if (
         !values?.grnDate
     ) {
 
         errors.push({
+
             field:
                 [
                     "grnDate",
@@ -1571,16 +1882,22 @@ export const validateGRNHeader = (
 
             message:
                 "GRN date is required.",
+
         });
 
     }
 
+
+    /* -----------------------------------------------------
+       PURCHASE ORDER
+    ----------------------------------------------------- */
 
     if (
         !values?.purchaseOrderId
     ) {
 
         errors.push({
+
             field:
                 [
                     "purchaseOrderId",
@@ -1588,16 +1905,22 @@ export const validateGRNHeader = (
 
             message:
                 "Purchase Order is required.",
+
         });
 
     }
 
+
+    /* -----------------------------------------------------
+       SUPPLIER
+    ----------------------------------------------------- */
 
     if (
         !values?.supplierId
     ) {
 
         errors.push({
+
             field:
                 [
                     "supplierId",
@@ -1605,16 +1928,22 @@ export const validateGRNHeader = (
 
             message:
                 "Supplier is required.",
+
         });
 
     }
 
+
+    /* -----------------------------------------------------
+       STORE
+    ----------------------------------------------------- */
 
     if (
         !values?.storeId
     ) {
 
         errors.push({
+
             field:
                 [
                     "storeId",
@@ -1622,6 +1951,7 @@ export const validateGRNHeader = (
 
             message:
                 "Receiving store is required.",
+
         });
 
     }
@@ -1633,7 +1963,7 @@ export const validateGRNHeader = (
 
 
 /* =========================================================
-   VALIDATE GRN
+   VALIDATE COMPLETE GRN
    ========================================================= */
 
 export const validateGRN = (
@@ -1643,6 +1973,10 @@ export const validateGRN = (
     const errors = [];
 
 
+    /* -----------------------------------------------------
+       HEADER VALIDATION
+    ----------------------------------------------------- */
+
     errors.push(
         ...validateGRNHeader(
             values
@@ -1650,31 +1984,24 @@ export const validateGRN = (
     );
 
 
+    /* -----------------------------------------------------
+       ITEMS
+    ----------------------------------------------------- */
+
     const items =
         safeArray(
             values?.items
         );
 
 
-    if (
-        items.length ===
-        0
-    ) {
-
-        errors.push({
-
-            field:
-                [
-                    "items",
-                ],
-
-            message:
-                "At least one GRN item is required.",
-
-        });
-
-    }
-
+    /*
+     * validateGRNItems already handles:
+     * - empty items
+     * - item validation
+     * - duplicate item validation
+     *
+     * Do not add another empty-items error here.
+     */
 
     errors.push(
         ...validateGRNItems(
@@ -1687,26 +2014,35 @@ export const validateGRN = (
     );
 
 
+    /* -----------------------------------------------------
+       TOTAL RECEIVED QUANTITY
+    ----------------------------------------------------- */
+
     const totalReceived =
         items.reduce(
             (
                 total,
                 item
-            ) =>
-                total +
-                Math.max(
-                    0,
-                    toNumber(
-                        item?.receivedQuantity
+            ) => {
+
+                return (
+                    total +
+                    Math.max(
+                        0,
+                        toNumber(
+                            item?.receivedQuantity
+                        )
                     )
-                ),
+                );
+
+            },
             0
         );
 
 
     if (
-        totalReceived <=
-        0
+        items.length > 0 &&
+        totalReceived <= 0
     ) {
 
         errors.push({
@@ -1730,7 +2066,7 @@ export const validateGRN = (
 
 
 /* =========================================================
-   VALIDATE GRN - MESSAGE ONLY
+   GET GRN VALIDATION MESSAGES
    ========================================================= */
 
 export const getGRNValidationMessages = (
@@ -1739,17 +2075,34 @@ export const getGRNValidationMessages = (
 
     return validateGRN(
         values
-    ).map(
-        error =>
-            typeof error ===
-            "string"
-                ? error
-                : error?.message
-    ).filter(
-        Boolean
-    );
+    )
+        .map(
+            error => {
+
+                if (
+                    typeof error ===
+                    "string"
+                ) {
+
+                    return error;
+
+                }
+
+
+                return error?.message;
+
+            }
+        )
+        .filter(
+            Boolean
+        );
 
 };
+
+/* =========================================================
+   VALIDATE GRN - MESSAGE ONLY
+   ========================================================= */
+
 
 
 /* =========================================================
@@ -1826,7 +2179,127 @@ export const isGRNReadOnly = (
 
 };
 
+/* =========================================================
+   IS STOCK POSTING COMPLETED
+   ========================================================= */
 
+export const isGRNStockPosted = (
+    stockPostingStatus
+) => {
+
+    return (
+        stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.POSTED
+    );
+
+};
+
+
+/* =========================================================
+   IS STOCK POSTING FAILED
+   ========================================================= */
+
+export const isGRNStockPostingFailed = (
+    stockPostingStatus
+) => {
+
+    return (
+        stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.FAILED
+    );
+
+};
+
+
+/* =========================================================
+   IS STOCK POSTING PENDING
+   ========================================================= */
+
+export const isGRNStockPostingPending = (
+    stockPostingStatus
+) => {
+
+    return (
+        stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.PENDING
+    );
+
+};
+
+
+/* =========================================================
+   CAN POST STOCK
+   ========================================================= */
+
+export const canPostGRNStock = (
+    grn = {}
+) => {
+
+    const status =
+        grn?.status;
+
+
+    const stockPostingStatus =
+        grn?.stockPostingStatus;
+
+
+    if (
+        isGRNStockPosted(
+            stockPostingStatus
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        isGRNStockPostingPending(
+            stockPostingStatus
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        status !==
+        GRN_STATUS.APPROVED
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.NOT_POSTED ||
+        stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.FAILED ||
+        !stockPostingStatus
+    );
+
+};
+
+
+/* =========================================================
+   CAN RETRY STOCK POSTING
+   ========================================================= */
+
+export const canRetryGRNStockPosting = (
+    grn = {}
+) => {
+
+    return (
+        grn?.stockPostingStatus ===
+        GRN_STOCK_POSTING_STATUS.FAILED
+    );
+
+};
 /* =========================================================
    IS DRAFT
    ========================================================= */
@@ -1866,8 +2339,10 @@ export const isGRNApproved = (
     return (
         status ===
         GRN_STATUS.APPROVED ||
+
         status ===
         GRN_STATUS.STOCK_POSTED ||
+
         status ===
         GRN_STATUS.COMPLETED
     );
@@ -1888,7 +2363,6 @@ export const isGRNCancelled = (
 
 };
 
-
 /* =========================================================
    GET STATUS LABEL
    ========================================================= */
@@ -1899,7 +2373,7 @@ export const getGRNStatusLabel = (
 
     return (
         GRN_STATUS_LABELS?.[
-            status
+        status
         ] ||
         status ||
         "-"
@@ -1918,7 +2392,7 @@ export const getGRNTypeLabel = (
 
     return (
         GRN_TYPE_LABELS?.[
-            type
+        type
         ] ||
         type ||
         "-"
@@ -1937,7 +2411,7 @@ export const getGRNQualityStatusLabel = (
 
     return (
         GRN_QUALITY_STATUS_LABELS?.[
-            status
+        status
         ] ||
         status ||
         "-"
@@ -1956,7 +2430,7 @@ export const getGRNInspectionStatusLabel = (
 
     return (
         GRN_INSPECTION_STATUS_LABELS?.[
-            status
+        status
         ] ||
         status ||
         "-"
@@ -1975,7 +2449,7 @@ export const getGRNReceivingModeLabel = (
 
     return (
         GRN_RECEIVING_MODE_LABELS?.[
-            mode
+        mode
         ] ||
         mode ||
         "-"
@@ -1994,7 +2468,7 @@ export const getGRNStockPostingStatusLabel = (
 
     return (
         GRN_STOCK_POSTING_STATUS_LABELS?.[
-            status
+        status
         ] ||
         status ||
         "-"
@@ -2012,7 +2486,7 @@ export const getGRNStatusColor = (
 ) => {
 
     switch (
-        status
+    status
     ) {
 
         case GRN_STATUS.DRAFT:
@@ -2073,7 +2547,7 @@ export const getGRNQualityStatusColor = (
 ) => {
 
     switch (
-        status
+    status
     ) {
 
         case GRN_QUALITY_STATUS.PENDING:
@@ -2124,7 +2598,7 @@ export const getGRNInspectionStatusColor = (
 ) => {
 
     switch (
-        status
+    status
     ) {
 
         case GRN_INSPECTION_STATUS.NOT_REQUIRED:
@@ -2175,7 +2649,7 @@ export const getGRNReceivingModeColor = (
 ) => {
 
     switch (
-        mode
+    mode
     ) {
 
         case GRN_RECEIVING_MODE.FULL:
@@ -2206,7 +2680,7 @@ export const getGRNStockPostingStatusColor = (
 ) => {
 
     switch (
-        status
+    status
     ) {
 
         case GRN_STOCK_POSTING_STATUS.NOT_POSTED:
@@ -2392,8 +2866,6 @@ export const prepareGRNItemPayload = (
     };
 
 };
-
-
 /* =========================================================
    PREPARE GRN PAYLOAD
    ========================================================= */
@@ -2411,13 +2883,7 @@ export const prepareGRNPayload = (
     const totals =
         calculateGRNTotals(
             items,
-            {
-                otherCharges:
-                    values?.otherCharges,
-
-                roundOff:
-                    values?.roundOff,
-            }
+            values
         );
 
 
@@ -2437,13 +2903,13 @@ export const prepareGRNPayload = (
                 values?.grnDate
             ),
 
+        grnType:
+            values?.grnType ??
+            GRN_TYPE.STANDARD,
+
         status:
             values?.status ??
             GRN_STATUS.DRAFT,
-
-        grnType:
-            values?.grnType ??
-            GRN_TYPE.AGAINST_PO,
 
         purchaseOrderId:
             values?.purchaseOrderId ??
@@ -2477,15 +2943,6 @@ export const prepareGRNPayload = (
                 values?.storeName
             ),
 
-        receivingLocationId:
-            values?.receivingLocationId ??
-            null,
-
-        receivingLocationName:
-            normalizeText(
-                values?.receivingLocationName
-            ),
-
         invoiceNumber:
             normalizeText(
                 values?.invoiceNumber
@@ -2496,59 +2953,49 @@ export const prepareGRNPayload = (
                 values?.invoiceDate
             ),
 
-        challanNumber:
-            normalizeText(
-                values?.challanNumber
+        receivingMode:
+            values?.receivingMode ??
+            getReceivingModeFromItems(
+                items
             ),
 
-        challanDate:
-            normalizeDate(
-                values?.challanDate
-            ),
-
-        vehicleNumber:
-            normalizeText(
-                values?.vehicleNumber
-            ),
-
-        transporterName:
-            normalizeText(
-                values?.transporterName
-            ),
-
-        receivedBy:
-            values?.receivedBy ??
-            null,
-
-        receiverName:
-            normalizeText(
-                values?.receiverName
-            ),
-
-        inspectionRequired:
-            values?.inspectionRequired !==
-            false,
+        qualityStatus:
+            values?.qualityStatus ??
+            GRN_QUALITY_STATUS.PENDING,
 
         inspectionStatus:
             values?.inspectionStatus ??
-            GRN_INSPECTION_STATUS.PENDING,
+            GRN_INSPECTION_STATUS.NOT_STARTED,
 
         stockPostingStatus:
             values?.stockPostingStatus ??
             GRN_STOCK_POSTING_STATUS.NOT_POSTED,
 
-        receivingMode:
-            values?.receivingMode ??
-            GRN_RECEIVING_MODE.FULL,
+        remarks:
+            normalizeText(
+                values?.remarks
+            ),
+
+        supplierRemarks:
+            normalizeText(
+                values?.supplierRemarks
+            ),
+
+        internalRemarks:
+            normalizeText(
+                values?.internalRemarks
+            ),
+
+        items:
+            items.map(
+                prepareGRNItemPayload
+            ),
 
         totalItems:
             totals.totalItems,
 
         totalOrderedQuantity:
             totals.totalOrderedQuantity,
-
-        totalPreviouslyReceivedQuantity:
-            totals.totalPreviouslyReceivedQuantity,
 
         totalPendingQuantity:
             totals.totalPendingQuantity,
@@ -2583,32 +3030,17 @@ export const prepareGRNPayload = (
         grandTotal:
             totals.grandTotal,
 
-        remarks:
-            normalizeText(
-                values?.remarks
-            ),
-
-        internalRemarks:
-            normalizeText(
-                values?.internalRemarks
-            ),
-
-        items:
-            items.map(
-                prepareGRNItemPayload
-            ),
-
     };
 
 };
 
 
 /* =========================================================
-   GET RECEIVING MODE
+   GET RECEIVING MODE FROM ITEMS
    ========================================================= */
 
 export const getReceivingModeFromItems = (
-    items
+    items = []
 ) => {
 
     const safeItems =
@@ -2627,38 +3059,109 @@ export const getReceivingModeFromItems = (
     }
 
 
-    const hasPartial =
-        safeItems.some(
-            item => {
-
-                const pending =
-                    getPendingQuantity(
-                        item
-                    );
-
-                const received =
-                    Math.max(
-                        0,
-                        toNumber(
-                            item?.receivedQuantity
-                        )
-                    );
+    let hasPartial =
+        false;
 
 
-                return (
-                    received >
-                    0 &&
-                    received <
-                    pending
+    let hasShort =
+        false;
+
+
+    let hasExcess =
+        false;
+
+
+    safeItems.forEach(
+        (
+            item
+        ) => {
+
+            const ordered =
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.orderedQuantity
+                    )
                 );
 
+
+            const received =
+                Math.max(
+                    0,
+                    toNumber(
+                        item?.receivedQuantity
+                    )
+                );
+
+
+            if (
+                received >
+                ordered
+            ) {
+
+                hasExcess =
+                    true;
+
+                return;
+
             }
-        );
 
 
-    return hasPartial
-        ? GRN_RECEIVING_MODE.PARTIAL
-        : GRN_RECEIVING_MODE.FULL;
+            if (
+                received <
+                ordered
+            ) {
+
+                hasPartial =
+                    true;
+
+            }
+
+
+            if (
+                received ===
+                0 &&
+                ordered >
+                0
+            ) {
+
+                hasShort =
+                    true;
+
+            }
+
+        }
+    );
+
+
+    if (
+        hasExcess
+    ) {
+
+        return GRN_RECEIVING_MODE.EXCESS;
+
+    }
+
+
+    if (
+        hasShort
+    ) {
+
+        return GRN_RECEIVING_MODE.SHORT;
+
+    }
+
+
+    if (
+        hasPartial
+    ) {
+
+        return GRN_RECEIVING_MODE.PARTIAL;
+
+    }
+
+
+    return GRN_RECEIVING_MODE.FULL;
 
 };
 
@@ -2671,136 +3174,167 @@ export const getGRNSummary = (
     values = {}
 ) => {
 
+    const items =
+        safeArray(
+            values?.items
+        );
+
+
     const totals =
         calculateGRNTotals(
-            values?.items,
-            {
-                otherCharges:
-                    values?.otherCharges,
-
-                roundOff:
-                    values?.roundOff,
-            }
+            items,
+            values
         );
 
 
     return {
 
-        totalItems:
-            totals.totalItems,
+        status:
+            values?.status ??
+            GRN_STATUS.DRAFT,
 
-        totalOrderedQuantity:
-            totals.totalOrderedQuantity,
+        statusLabel:
+            getGRNStatusLabel(
+                values?.status ??
+                GRN_STATUS.DRAFT
+            ),
 
-        totalPendingQuantity:
-            totals.totalPendingQuantity,
+        type:
+            values?.grnType ??
+            GRN_TYPE.STANDARD,
 
-        totalReceivedQuantity:
-            totals.totalReceivedQuantity,
+        typeLabel:
+            getGRNTypeLabel(
+                values?.grnType ??
+                GRN_TYPE.STANDARD
+            ),
 
-        totalAcceptedQuantity:
-            totals.totalAcceptedQuantity,
+        qualityStatus:
+            values?.qualityStatus ??
+            GRN_QUALITY_STATUS.PENDING,
 
-        totalRejectedQuantity:
-            totals.totalRejectedQuantity,
+        qualityStatusLabel:
+            getGRNQualityStatusLabel(
+                values?.qualityStatus ??
+                GRN_QUALITY_STATUS.PENDING
+            ),
 
-        totalDamagedQuantity:
-            totals.totalDamagedQuantity,
+        inspectionStatus:
+            values?.inspectionStatus ??
+            GRN_INSPECTION_STATUS.NOT_STARTED,
 
-        subtotal:
-            totals.subtotal,
+        inspectionStatusLabel:
+            getGRNInspectionStatusLabel(
+                values?.inspectionStatus ??
+                GRN_INSPECTION_STATUS.NOT_STARTED
+            ),
 
-        taxAmount:
-            totals.taxAmount,
+        receivingMode:
+            values?.receivingMode ??
+            getReceivingModeFromItems(
+                items
+            ),
 
-        grandTotal:
-            totals.grandTotal,
+        receivingModeLabel:
+            getGRNReceivingModeLabel(
+                values?.receivingMode ??
+                getReceivingModeFromItems(
+                    items
+                )
+            ),
+
+        stockPostingStatus:
+            values?.stockPostingStatus ??
+            GRN_STOCK_POSTING_STATUS.NOT_POSTED,
+
+        stockPostingStatusLabel:
+            getGRNStockPostingStatusLabel(
+                values?.stockPostingStatus ??
+                GRN_STOCK_POSTING_STATUS.NOT_POSTED
+            ),
+
+        ...totals,
 
     };
 
 };
 
+
 /* =========================================================
-   GRN ITEM STATUS COLOR
+   GET GRN ITEM STATUS COLOR
    ========================================================= */
 
 export const getGRNItemStatusColor = (
     status
 ) => {
 
-    const value =
-        String(
-            status ||
-            ""
-        )
-            .trim()
-            .toUpperCase();
-
-
     switch (
-        value
+    status
     ) {
 
         case "ACCEPTED":
-            return "success";
+
+            return "green";
 
 
         case "PARTIALLY_ACCEPTED":
-            return "warning";
+
+            return "blue";
 
 
         case "REJECTED":
-            return "error";
+
+            return "red";
 
 
-        case "PARTIALLY_REJECTED":
-            return "warning";
+        case "DAMAGED":
+
+            return "red";
 
 
-        case "RECEIVING":
-            return "processing";
+        case "EXPIRED":
+
+            return "red";
 
 
-        case "COMPLETED":
-            return "success";
+        case "QUARANTINED":
+
+            return "orange";
+
+
+        case "POSTED":
+
+            return "cyan";
 
 
         case "CANCELLED":
-            return "error";
+
+            return "default";
 
 
         case "PENDING":
+
         default:
+
             return "default";
 
     }
 
 };
 
+
 /* =========================================================
-   GRN ITEM STATUS LABEL
+   GET GRN ITEM STATUS LABEL
    ========================================================= */
 
 export const getGRNItemStatusLabel = (
     status
 ) => {
 
-    const value =
-        String(
-            status ||
-            ""
-        )
-            .trim()
-            .toUpperCase();
-
-
     const labels = {
 
         PENDING:
             "Pending",
-
-        RECEIVING:
-            "Receiving",
 
         ACCEPTED:
             "Accepted",
@@ -2811,11 +3345,17 @@ export const getGRNItemStatusLabel = (
         REJECTED:
             "Rejected",
 
-        PARTIALLY_REJECTED:
-            "Partially Rejected",
+        DAMAGED:
+            "Damaged",
 
-        COMPLETED:
-            "Completed",
+        EXPIRED:
+            "Expired",
+
+        QUARANTINED:
+            "Quarantined",
+
+        POSTED:
+            "Posted",
 
         CANCELLED:
             "Cancelled",
@@ -2824,9 +3364,11 @@ export const getGRNItemStatusLabel = (
 
 
     return (
-        labels[value] ||
+        labels?.[
+        status
+        ] ||
         status ||
-        "Pending"
+        "-"
     );
 
 };
