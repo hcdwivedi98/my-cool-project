@@ -43,6 +43,20 @@ function AppSidebar() {
                 icon: <DashboardOutlined />,
                 label: "Dashboard",
             },
+{
+                key: "billing",
+                icon: <DashboardOutlined />,
+                label: "Billing",
+
+                children: [
+
+                    {
+                        key: "/billing",
+                        label: "POS Billing",
+                    },
+                ]
+            },
+
 
             {
                 key: "purchase",

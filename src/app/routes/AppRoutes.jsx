@@ -40,7 +40,7 @@ import RolePage from "@/modules/user-management/role";
 import { PermissionPage, } from "@/modules/user-management/permission";
 import { PurchaseOrderPage, } from "@/modules/purchase-management/purchase-order";
 import { GRNPage, } from "@/modules/purchase-management/grn";
-
+import BillingPage from "@/modules/billing/pages/BillingPage";
 function AppRoutes() {
 
     return (
@@ -199,7 +199,13 @@ function AppRoutes() {
 
                     <Route
                         path="/grn"
-                        element={<GRNPage />}               />
+                        element={<GRNPage />} 
+                    />
+                    <Route
+                        path="/billing"
+                        element={<BillingPage />}
+                    />
+
                 </Route>
 
             </Routes>

@@ -1,0 +1,760 @@
+/* =========================================================
+   BILLING - PROFESSIONAL INVOICE
+   Screen + A4 Print
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT INVOICE
+   ========================================================= */
+
+.billing-invoice-print-area {
+    width: 100%;
+    background: #ffffff;
+    color: #111111;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.billing-invoice-preview {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    color: #111111;
+}
+
+
+/* =========================================================
+   SECTION HELPERS
+   ========================================================= */
+
+.invoice-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.invoice-payment-section {
+    margin-top: 16px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.invoice-notes-section {
+    margin-top: 16px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.invoice-footer {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 4px 0 14px;
+}
+
+.invoice-header-left {
+    flex: 1;
+    min-width: 0;
+}
+
+.invoice-header-left .ant-typography {
+    margin-bottom: 2px;
+}
+
+.invoice-header-left .ant-typography:first-child {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.invoice-header-right {
+    flex: 0 0 230px;
+    text-align: right;
+}
+
+.invoice-header-right .ant-typography {
+    margin-bottom: 0;
+}
+
+.invoice-header-right .ant-typography:first-child {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.invoice-header-right > div {
+    line-height: 1.45;
+}
+
+.invoice-header-right .ant-tag {
+    margin-inline-end: 0;
+}
+
+
+/* =========================================================
+   CUSTOMER / PRESCRIPTION
+   ========================================================= */
+
+.invoice-customer-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 12px 0;
+}
+
+.invoice-customer-section > div {
+    min-width: 0;
+}
+
+.invoice-customer-section > div:first-child,
+.invoice-customer-section > div:last-child {
+    line-height: 1.55;
+}
+
+.invoice-customer-section > div > .ant-typography:first-child {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   DIVIDERS
+   ========================================================= */
+
+.billing-invoice-preview .ant-divider {
+    margin: 10px 0;
+    border-color: #bfbfbf;
+}
+
+
+/* =========================================================
+   ITEMS TABLE
+   ========================================================= */
+
+.invoice-items-table {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 4px;
+}
+
+.invoice-items-table .ant-table {
+    width: 100%;
+    max-width: 100%;
+    font-size: 10px;
+}
+
+.invoice-items-table .ant-table-container {
+    width: 100%;
+    max-width: 100%;
+}
+
+.invoice-items-table .ant-table-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: visible !important;
+}
+
+.invoice-items-table table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+
+/* Table Header */
+
+.invoice-items-table .ant-table-thead > tr > th {
+    padding: 7px 6px;
+    background: #f3f3f3;
+    color: #111111;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.25;
+    white-space: nowrap;
+    border: 1px solid #999999;
+}
+
+
+/* Table Body */
+
+.invoice-items-table .ant-table-tbody > tr > td {
+    padding: 7px 6px;
+    color: #111111;
+    font-size: 10px;
+    line-height: 1.35;
+    vertical-align: top;
+    border: 1px solid #b5b5b5;
+}
+
+.invoice-items-table .ant-table-tbody > tr:hover > td {
+    background: #ffffff !important;
+}
+
+.invoice-items-table .ant-table-cell {
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+
+/* Medicine */
+
+.invoice-items-table .ant-table-tbody > tr > td:nth-child(2) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/* Numeric cells */
+
+.invoice-items-table .ant-table-thead > tr > th.ant-table-cell-align-right,
+.invoice-items-table .ant-table-tbody > tr > td.ant-table-cell-align-right {
+    text-align: right;
+}
+
+
+/* =========================================================
+   TOTALS
+   ========================================================= */
+
+.invoice-totals {
+    width: 350px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-top: 18px;
+    padding-top: 4px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.billing-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.billing-summary-row .ant-typography {
+    margin-bottom: 0;
+}
+
+.invoice-totals .ant-divider {
+    margin: 8px 0;
+    border-color: #999999;
+}
+
+
+/* Grand Total */
+
+.invoice-totals .billing-summary-row:last-child {
+    padding: 8px 10px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    background: #f3f3f3;
+    border-top: 2px solid #111111;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.invoice-totals .billing-summary-row:last-child .ant-typography:last-child {
+    font-size: 16px !important;
+}
+
+
+/* =========================================================
+   PAYMENTS
+   ========================================================= */
+
+.invoice-payment-section {
+    margin-top: 18px;
+}
+
+.invoice-payment-section .ant-typography {
+    margin-bottom: 8px;
+}
+
+.invoice-payment-section .ant-list {
+    font-size: 10px;
+}
+
+.invoice-payment-section .ant-list-item {
+    padding: 7px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.invoice-payment-section .ant-list-item:last-child {
+    border-bottom: none;
+}
+
+.invoice-payment-section .ant-tag {
+    margin-inline-end: 6px;
+}
+
+
+/* Payment summary */
+
+.invoice-payment-section .billing-summary-row {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   NOTES / TERMS
+   ========================================================= */
+
+.invoice-notes-section {
+    margin-top: 18px;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.invoice-notes-section > div {
+    margin-bottom: 8px;
+}
+
+.invoice-notes-section > div:last-child {
+    margin-bottom: 0;
+}
+
+.invoice-notes-section .ant-typography {
+    font-size: 10px;
+}
+
+.invoice-notes-section .ant-typography strong {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.invoice-footer {
+    margin-top: 18px;
+    padding-top: 10px;
+    text-align: center;
+    border-top: 1px solid #bfbfbf;
+}
+
+.invoice-footer .ant-typography {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   SCREEN PREVIEW
+   ========================================================= */
+
+@media screen {
+
+    .billing-invoice-print-area {
+        padding: 8px;
+        background: #ffffff;
+    }
+
+    .billing-invoice-preview {
+        padding: 28px;
+        border-radius: 4px;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT - A4 PORTRAIT
+   ========================================================= */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 12mm;
+    }
+
+
+    html,
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: #ffffff !important;
+        color: #111111 !important;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 9px;
+    }
+
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------------------
+       ROOT
+       ----------------------------------------------------- */
+
+    .billing-invoice-print-area {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: #ffffff !important;
+        color: #111111 !important;
+        overflow: visible !important;
+    }
+
+
+    .billing-invoice-preview {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+    }
+
+
+    .billing-invoice-preview.ant-card {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+
+    .billing-invoice-preview .ant-card-body {
+        padding: 0 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       HEADER
+       ----------------------------------------------------- */
+
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 0 0 9px;
+        margin-bottom: 0;
+    }
+
+
+    .invoice-header-left {
+        flex: 1;
+        min-width: 0;
+    }
+
+
+    .invoice-header-left .ant-typography:first-child {
+        font-size: 17px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+
+    .invoice-header-right {
+        flex: 0 0 190px;
+    }
+
+
+    .invoice-header-right .ant-typography:first-child {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    .invoice-header-right > div {
+        line-height: 1.35;
+    }
+
+
+    /* -----------------------------------------------------
+       CUSTOMER
+       ----------------------------------------------------- */
+
+    .invoice-customer-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        padding: 7px 0;
+        margin-bottom: 0;
+    }
+
+
+    .invoice-customer-section > div {
+        line-height: 1.35;
+    }
+
+
+    .invoice-customer-section > div > .ant-typography:first-child {
+        margin-bottom: 3px;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+    /* -----------------------------------------------------
+       DIVIDERS
+       ----------------------------------------------------- */
+
+    .billing-invoice-preview .ant-divider {
+        margin: 7px 0;
+        border-color: #999999 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       TABLE
+       ----------------------------------------------------- */
+
+    .invoice-items-table {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 2px;
+        overflow: visible !important;
+    }
+
+
+    .invoice-items-table .ant-table {
+        width: 100%;
+        max-width: 100%;
+        font-size: 9px;
+    }
+
+
+    .invoice-items-table .ant-table-container {
+        width: 100%;
+        max-width: 100%;
+        overflow: visible !important;
+    }
+
+
+    .invoice-items-table .ant-table-content {
+        width: 100%;
+        max-width: 100%;
+        overflow: visible !important;
+    }
+
+
+    .invoice-items-table table {
+        width: 100%;
+        max-width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+
+    .invoice-items-table .ant-table-thead {
+        display: table-header-group;
+    }
+
+
+    .invoice-items-table .ant-table-thead > tr > th {
+        padding: 5px 4px;
+        background: #f3f3f3 !important;
+        color: #111111 !important;
+        font-size: 8.5px;
+        font-weight: 700;
+        line-height: 1.15;
+        white-space: nowrap;
+        border: 1px solid #888888 !important;
+    }
+
+
+    .invoice-items-table .ant-table-tbody > tr > td {
+        padding: 5px 4px;
+        color: #111111 !important;
+        font-size: 8.5px;
+        line-height: 1.2;
+        vertical-align: top;
+        border: 1px solid #999999 !important;
+    }
+
+
+    .invoice-items-table .ant-table-cell {
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+
+
+    .invoice-items-table .ant-table-tbody > tr > td:nth-child(2) {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+
+    .invoice-items-table .ant-table-tbody > tr:hover > td {
+        background: #ffffff !important;
+    }
+
+
+    .invoice-items-table tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        page-break-after: auto;
+    }
+
+
+    /* -----------------------------------------------------
+       TOTALS
+       ----------------------------------------------------- */
+
+    .invoice-totals {
+        width: 310px;
+        max-width: 100%;
+        margin-top: 10px;
+        margin-left: auto;
+        padding-top: 0;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+
+    .billing-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 3px;
+        font-size: 8.5px;
+        line-height: 1.2;
+    }
+
+
+    .invoice-totals .ant-divider {
+        margin: 5px 0;
+    }
+
+
+    .invoice-totals .billing-summary-row:last-child {
+        padding: 6px 8px;
+        margin-top: 3px;
+        background: #f3f3f3 !important;
+        border-top: 1px solid #111111;
+        font-size: 10px;
+    }
+
+
+    .invoice-totals .billing-summary-row:last-child .ant-typography:last-child {
+        font-size: 12px !important;
+    }
+
+
+    /* -----------------------------------------------------
+       PAYMENTS
+       ----------------------------------------------------- */
+
+    .invoice-payment-section {
+        margin-top: 9px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+
+    .invoice-payment-section .ant-list {
+        font-size: 8.5px;
+    }
+
+
+    .invoice-payment-section .ant-list-item {
+        padding: 4px 0;
+        border-bottom: 1px solid #dddddd;
+    }
+
+
+    .invoice-payment-section .billing-summary-row {
+        margin-bottom: 3px;
+        font-size: 8.5px;
+    }
+
+
+    /* -----------------------------------------------------
+       NOTES
+       ----------------------------------------------------- */
+
+    .invoice-notes-section {
+        margin-top: 9px;
+        font-size: 8.5px;
+        line-height: 1.3;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+
+    .invoice-notes-section > div {
+        margin-bottom: 5px;
+    }
+
+
+    .invoice-notes-section .ant-typography {
+        font-size: 8.5px;
+    }
+
+
+    /* -----------------------------------------------------
+       FOOTER
+       ----------------------------------------------------- */
+
+    .invoice-footer {
+        margin-top: 10px;
+        padding-top: 6px;
+        border-top: 1px solid #999999;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+
+    .invoice-footer .ant-typography {
+        font-size: 8.5px;
+    }
+
+
+    /* -----------------------------------------------------
+       TAGS
+       ----------------------------------------------------- */
+
+    .billing-invoice-preview .ant-tag {
+        background: transparent !important;
+        color: #111111 !important;
+        border-color: #888888 !important;
+    }
+
+
+    /* -----------------------------------------------------
+       PRINT SAFETY
+       ----------------------------------------------------- */
+
+    .invoice-section,
+    .invoice-payment-section,
+    .invoice-notes-section,
+    .invoice-footer,
+    .invoice-totals {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+}

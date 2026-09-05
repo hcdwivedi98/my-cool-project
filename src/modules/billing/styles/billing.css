@@ -1,0 +1,923 @@
+/* =========================================================
+   BILLING PAGE
+   BILLING-12
+   POS SINGLE-SCREEN LAYOUT
+   ========================================================= */
+
+.billing-page {
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.billing-header {
+    min-height: 64px;
+
+    padding:
+        10px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    background: #ffffff;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+
+.billing-header-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.billing-header-left > svg {
+    font-size: 24px;
+}
+
+
+.billing-header-right {
+    display: flex;
+
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   PAGE CONTENT
+   ========================================================= */
+
+.billing-page-content {
+    padding: 16px 20px 24px;
+
+    max-width: 100%;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   PATIENT SELECTOR
+   ========================================================= */
+
+.billing-patient-selector {
+    width: 100%;
+
+    margin-bottom: 16px;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   MAIN POS GRID
+   ========================================================= */
+
+.billing-main-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 380px);
+
+    align-items: start;
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   CENTER WORKSPACE
+   ========================================================= */
+
+.billing-center-panel {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   RIGHT PANEL
+   ========================================================= */
+
+.billing-right-panel {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+    position: sticky;
+
+    top: 16px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.billing-medicine-search {
+    width: 100%;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+.billing-search-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+}
+
+
+.billing-barcode-input {
+    width: 100%;
+
+    min-height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid #d9d9d9;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+}
+
+
+.billing-barcode-input:focus-within {
+    border-color:
+        #1677ff;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(22, 119, 255, 0.1);
+}
+
+
+.billing-barcode-input svg {
+    flex-shrink: 0;
+
+    font-size: 18px;
+}
+
+
+.billing-barcode-input input {
+    width: 100%;
+
+    min-width: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+.billing-cart {
+    width: 100%;
+
+    padding: 16px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+
+.billing-cart-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+}
+
+
+.billing-cart .ant-table-wrapper {
+    width: 100%;
+}
+
+
+.billing-cart .ant-table {
+    font-size: 13px;
+}
+
+
+.billing-cart .ant-table-thead > tr > th {
+    white-space: nowrap;
+
+    font-weight: 600;
+}
+
+
+.billing-cart .ant-table-tbody > tr > td {
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.billing-summary-card,
+.billing-payment-card,
+.billing-actions-card,
+.billing-invoice-card {
+    width: 100%;
+}
+
+
+.billing-summary-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    min-height: 30px;
+}
+
+
+.billing-grand-total {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding-top: 4px;
+}
+
+
+/* =========================================================
+   PAYMENT
+   ========================================================= */
+
+.billing-payment-card .ant-input-number {
+    width: 100%;
+}
+
+
+.billing-payment-card .ant-select {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.billing-actions-card .ant-btn {
+    min-height: 44px;
+
+    font-weight: 500;
+}
+
+
+.billing-actions-card
+    #billing-complete-button {
+    min-height: 48px;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   INVOICE
+   ========================================================= */
+
+.billing-invoice-card {
+    animation:
+        billingInvoiceAppear
+        180ms
+        ease-out;
+}
+
+
+@keyframes billingInvoiceAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+
+.billing-page-content
+    .ant-alert {
+    border-radius: 8px;
+}
+
+
+.billing-page-content
+    .ant-alert-description ul {
+    margin:
+        8px 0 0;
+
+    padding-left:
+        20px;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (
+    min-width: 1200px
+) {
+
+    .billing-page-content {
+        padding-left:
+            20px;
+
+        padding-right:
+            20px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (
+    max-width: 1199px
+) {
+
+    .billing-main-grid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+
+    .billing-right-panel {
+        position: static;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        align-items: start;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (
+    max-width: 767px
+) {
+
+    .billing-page-content {
+        padding:
+            10px;
+    }
+
+
+    .billing-header {
+        padding:
+            10px 12px;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .billing-header-right {
+        justify-content:
+            flex-end;
+    }
+
+
+    .billing-patient-selector {
+        padding:
+            12px;
+    }
+
+
+    .billing-right-panel {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+
+    .billing-cart {
+        padding:
+            10px;
+    }
+
+
+    .billing-medicine-search {
+        padding:
+            12px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (
+    max-width: 575px
+) {
+
+    .billing-header-left {
+        align-items:
+            flex-start;
+    }
+
+
+    .billing-header-right {
+        width: 100%;
+    }
+
+
+    .billing-header-right
+        .ant-space {
+        width: 100%;
+
+        display: flex;
+
+        flex-wrap: wrap;
+    }
+
+
+    .billing-header-right
+        .ant-btn {
+        flex: 1;
+    }
+
+
+    .billing-summary-row {
+        min-height:
+            34px;
+    }
+
+
+    .billing-grand-total {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap: 4px;
+    }
+
+
+    .billing-cart .ant-table {
+        font-size:
+            12px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    .billing-invoice-card {
+        animation:
+            none;
+    }
+
+}
+/* =========================================================
+   BILLING PAGE - MAIN POS LAYOUT FIX
+   ========================================================= */
+
+.billing-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.billing-page-content {
+    width: 100%;
+    min-width: 0;
+    padding: 16px 20px 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
+.billing-main-grid {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* Ant Design Row safety */
+
+.billing-main-grid.ant-row {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   LEFT WORKSPACE
+   ========================================================= */
+
+.billing-main-grid > .ant-col {
+    min-width: 0;
+}
+
+.billing-workspace-card {
+    width: 100%;
+    min-width: 0;
+}
+
+.billing-workspace-card .ant-card-body {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RIGHT PANEL
+   ========================================================= */
+
+.billing-right-panel {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    gap: 16px;
+}
+
+
+/* =========================================================
+   ALL RIGHT-SIDE CARDS
+   ========================================================= */
+
+.billing-right-panel > .ant-card,
+.billing-right-panel .billing-summary-card,
+.billing-right-panel .billing-payment-card,
+.billing-right-panel .billing-actions-card,
+.billing-right-panel .billing-invoice-card {
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BILL SUMMARY
+   ========================================================= */
+
+.billing-summary-card {
+    width: 100% !important;
+}
+
+.billing-summary-card .ant-card-head {
+    min-width: 0;
+}
+
+.billing-summary-card .ant-card-body {
+    width: 100%;
+    min-width: 0;
+    padding: 18px 20px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SUMMARY ROW
+   ========================================================= */
+
+.billing-summary-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+
+    gap: 16px;
+
+    margin-bottom: 10px;
+}
+
+.billing-summary-row:last-child {
+    margin-bottom: 0;
+}
+
+.billing-summary-row > * {
+    min-width: 0;
+}
+
+.billing-summary-row > .ant-typography:last-child {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+
+/* =========================================================
+   PAYMENT SECTION
+   ========================================================= */
+
+.billing-right-panel .ant-input,
+.billing-right-panel .ant-input-number,
+.billing-right-panel .ant-select,
+.billing-right-panel .ant-btn {
+    max-width: 100%;
+}
+
+.billing-right-panel .ant-input-number {
+    width: 100%;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.billing-right-panel .ant-space {
+    max-width: 100%;
+}
+
+.billing-right-panel .ant-space-item {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   TABLE / CART
+   ========================================================= */
+
+.billing-workspace-card .ant-table-wrapper {
+    width: 100%;
+    min-width: 0;
+}
+
+.billing-workspace-card .ant-table {
+    width: 100%;
+}
+
+.billing-workspace-card .ant-table-container {
+    width: 100%;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+    .billing-main-grid {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .billing-main-grid > .ant-col:first-child {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .billing-main-grid > .ant-col:last-child {
+        flex: 0 0 380px;
+        max-width: 380px;
+        min-width: 340px;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1440px) {
+
+    .billing-main-grid > .ant-col:last-child {
+        flex-basis: 400px;
+        max-width: 400px;
+    }
+
+}
+
+
+/* =========================================================
+   MEDIUM SCREEN
+   ========================================================= */
+
+@media (max-width: 1199px) {
+
+    .billing-main-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .billing-main-grid > .ant-col {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .billing-right-panel {
+        margin-top: 0;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .billing-page-content {
+        padding: 12px;
+    }
+
+    .billing-right-panel {
+        gap: 12px;
+    }
+
+    .billing-summary-card .ant-card-body {
+        padding: 16px;
+    }
+}
+
+/* =========================================================
+   BILLING PAGE HEADER
+   ========================================================= */
+
+.billing-page-header {
+    width: 100%;
+    padding: 0 0 14px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.billing-page-header .billing-page-title {
+    margin: 0;
+    font-size: 22px;
+    line-height: 30px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.billing-page-header .billing-page-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 4px;
+
+    font-size: 14px;
+    line-height: 20px;
+    color: #8a94a6;
+}
+
+
+/* =========================================================
+   BILLING CONTENT
+   ========================================================= */
+
+.billing-page-content {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 20px 24px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PATIENT CARD
+   ========================================================= */
+
+.billing-patient-card {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   MAIN POS AREA
+   ========================================================= */
+
+.billing-main-grid {
+    width: 100%;
+    min-width: 0;
+}
+
+.billing-main-grid > .ant-col {
+    min-width: 0;
+}
