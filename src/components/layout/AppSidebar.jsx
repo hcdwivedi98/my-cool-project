@@ -54,6 +54,11 @@ function AppSidebar() {
                         key: "/billing",
                         label: "POS Billing",
                     },
+
+                    {
+                        key: "/billing-history",
+                        label: "Billing History",
+                    },
                 ]
             },
 

@@ -41,6 +41,8 @@ import { PermissionPage, } from "@/modules/user-management/permission";
 import { PurchaseOrderPage, } from "@/modules/purchase-management/purchase-order";
 import { GRNPage, } from "@/modules/purchase-management/grn";
 import BillingPage from "@/modules/billing/pages/BillingPage";
+import BillingHistoryPage from "@/modules/billing/pages/BillingHistoryPage";
+
 function AppRoutes() {
 
     return (
@@ -204,6 +206,11 @@ function AppRoutes() {
                     <Route
                         path="/billing"
                         element={<BillingPage />}
+                    />
+
+                    <Route
+                        path="/billing-history"
+                        element={<BillingHistoryPage />}
                     />
 
                 </Route>

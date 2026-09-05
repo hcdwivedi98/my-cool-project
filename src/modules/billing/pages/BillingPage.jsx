@@ -27,9 +27,10 @@ import {
     EyeOutlined,
     PrinterOutlined,
     PlusOutlined,
+    ArrowLeftOutlined,
 } from "@ant-design/icons";
 
-
+import { useNavigate } from "react-router-dom";
 /* =========================================================
    CONSTANTS
    ========================================================= */
@@ -935,6 +936,7 @@ const DEFAULT_BILL = {
 
 const BillingPage = ({
 
+
     initialBill =
     DEFAULT_BILL,
 
@@ -948,6 +950,8 @@ const BillingPage = ({
     {},
 
 }) => {
+
+    const navigate = useNavigate();
 
     /* =====================================================
        MESSAGE
@@ -3695,30 +3699,29 @@ DEVELOPMENT MODE
             <div
                 className="billing-page-header"
             >
-
                 <div>
-
                     <h1
                         className="billing-page-title"
                     >
                         Pharmacy Billing
                     </h1>
 
-
                     <div
                         className="billing-page-subtitle"
                     >
-
                         <ShoppingCartOutlined />
-
                         <span>
                             Point of Sale
                         </span>
-
                     </div>
-
                 </div>
 
+                <Button
+                    icon={<ArrowLeftOutlined />}
+                    onClick={() => navigate("/billing-history")}
+                >
+                    Back to Billing History
+                </Button>
             </div>
 
 

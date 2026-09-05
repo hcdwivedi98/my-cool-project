@@ -125,7 +125,6 @@ const formatDate = (
    ========================================================= */
 
 const InvoicePreview = ({
-
     invoice,
 
     showHeader = true,
@@ -133,7 +132,7 @@ const InvoicePreview = ({
     showPayments = true,
 
     showNotes = true,
-
+    
 }) => {
 
     /* =====================================================

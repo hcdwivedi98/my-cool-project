@@ -921,3 +921,9 @@
 .billing-main-grid > .ant-col {
     min-width: 0;
 }
+
+.billing-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
